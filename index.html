@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1A1033">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>AltoLiv</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232D1B5C'/%3E%3Cpath d='M50 20l8.5 19.5L80 42l-15 14 4 21L50 67l-19 10 4-21-15-14 21.5-2.5z' fill='%23FFE9B5'/%3E%3C/svg%3E">
+<style>
+  *,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;overflow-x:hidden;}
+  html{height:100%;}
+  body{
+    min-height:100vh;
+    min-height:100dvh;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    color:#fff;
+    background:#1A1033;
+    background-image:linear-gradient(180deg,#1A1033 0%,#2D1B5C 50%,#5B3DA8 100%);
+    background-attachment:fixed;
+    user-select:none;
+    -webkit-user-select:none;
+    overflow-y:auto;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    top:-100px;right:-80px;
+    width:280px;height:280px;
+    background:radial-gradient(circle,rgba(255,180,80,.35) 0%,transparent 60%);
+    pointer-events:none;z-index:0;
+  }
+  body::after{
+    content:"";
+    position:fixed;
+    bottom:-120px;left:-100px;
+    width:320px;height:320px;
+    background:radial-gradient(circle,rgba(120,80,255,.4) 0%,transparent 60%);
+    pointer-events:none;z-index:0;
+  }
+  .app{
+    position:relative;z-index:1;
+    max-width:440px;margin:0 auto;
+    padding:max(10px,env(safe-area-inset-top)) 14px max(12px,env(safe-area-inset-bottom));
+    min-height:100vh;min-height:100dvh;
+  }
+  .glass{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;
+  }
+  .h1{font-size:32px;font-weight:700;letter-spacing:-0.5px;margin:0;}
+  .h2{font-size:24px;font-weight:700;letter-spacing:-0.3px;margin:0;}
+  .label-tiny{font-size:11px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:0.7px;text-transform:uppercase;}
+  .text-sec{color:rgba(255,255,255,.7);font-size:14px;}
+  .text-mut{color:rgba(255,255,255,.5);font-size:13px;}
+  .text-faint{color:rgba(255,255,255,.4);font-size:11px;font-weight:500;}
+
+  .btn-primary{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:14px 18px;
+    background:linear-gradient(135deg,#FFB347 0%,#FF7A5C 100%);
+    border:none;border-radius:16px;
+    font:700 15px inherit;color:#fff;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(255,122,92,.35);
+    transition:transform .1s;
+  }
+  .btn-primary:active{transform:scale(.97);}
+  .btn-xl{
+    padding:17px 18px;
+    font:800 17px inherit;
+    letter-spacing:0.2px;
+  }
+  .btn-xl span:last-child{font-size:18px;}
+  .btn-secondary{
+    display:flex;align-items:center;justify-content:center;gap:6px;
+    padding:14px 16px;
+    background:rgba(255,255,255,.1);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:16px;
+    font:700 14px inherit;color:#fff;
+    cursor:pointer;
+    transition:transform .1s, background .15s;
+    flex-shrink:0;
+  }
+  .btn-secondary:active{transform:scale(.97);background:rgba(255,255,255,.16);}
+  .cta-row{display:flex;gap:8px;align-items:stretch;}
+  .cta-row .btn-primary{flex:1;}
+  .btn-text{background:none;border:none;color:rgba(255,255,255,.5);font:500 13px inherit;padding:8px;cursor:pointer;}
+
+  .input{
+    width:100%;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;
+    padding:14px 16px;
+    color:#fff;font:500 16px inherit;
+    outline:none;
+  }
+  .input::placeholder{color:rgba(255,255,255,.3);}
+  .input:focus{border-color:#FFB347;}
+
+  .pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .pick{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:20px;
+    padding:18px 8px;
+    text-align:center;cursor:pointer;
+    transition:all .18s;
+  }
+  .pick.selected{
+    background:rgba(255,179,71,.18);
+    border:2px solid #FFB347;
+    box-shadow:0 0 16px rgba(255,179,71,.3);
+  }
+  .pick.selected.teal{
+    background:rgba(93,202,165,.18);
+    border-color:#5DCAA5;
+    box-shadow:0 0 16px rgba(93,202,165,.3);
+  }
+  .pick-emoji{font-size:48px;line-height:1;}
+  .pick-label{font-size:14px;font-weight:600;color:#fff;margin-top:8px;}
+  .pick-desc{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+
+  .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .day-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:14px;
+    padding:7px 12px;
+    font-size:12px;font-weight:600;color:#fff;letter-spacing:0.3px;
+  }
+  .day-chip svg{width:13px;height:13px;}
+
+  .meter-card{
+    padding:14px 16px 12px;margin-bottom:10px;
+    background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.06) 100%);
+    border:1.5px solid rgba(255,255,255,.22);
+    box-shadow:0 6px 20px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.12);
+  }
+  .meter-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .meter-status{display:flex;align-items:center;gap:7px;font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.1px;}
+  .meter-dot{width:9px;height:9px;border-radius:50%;}
+  .meter-track{
+    position:relative;height:22px;
+    background:rgba(0,0,0,.4);
+    border-radius:8px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .meter-track::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(90deg,#FF3B47 0%,#FF9D2E 25%,rgba(255,255,255,.25) 50%,#5FE07A 75%,#00C77C 100%);
+    opacity:.42;
+  }
+  .meter-needle{
+    position:absolute;top:-3px;width:4px;height:28px;
+    background:#fff;border-radius:3px;
+    box-shadow:0 0 12px rgba(255,255,255,.85), 0 0 4px rgba(255,255,255,1);
+    transition:left .55s cubic-bezier(.34,1.56,.64,1);
+    z-index:2;
+  }
+  .meter-foot{display:flex;justify-content:space-between;margin-top:6px;}
+
+  .progress{display:flex;gap:3px;margin-bottom:10px;}
+  .pdot{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.15);transition:background .3s;}
+  .pdot.done{background:#7CC576;}
+  .pdot.now{background:#FFB347;}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
+  .stat{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:12px;
+    padding:7px 4px;text-align:center;
+  }
+  .stat-icon{font-size:16px;line-height:1;}
+  .stat-val{font-size:13px;font-weight:600;color:#fff;margin-top:2px;}
+  .stat-lbl{font-size:9px;color:rgba(255,255,255,.4);font-weight:500;letter-spacing:0.4px;text-transform:uppercase;margin-top:1px;}
+
+  .scene{
+    position:relative;
+    background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.04) 100%);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:20px;
+    padding:12px 14px 14px;text-align:center;
+    margin-bottom:10px;overflow:hidden;
+  }
+  .scene::before{
+    content:"";position:absolute;
+    top:-30px;right:-30px;
+    width:130px;height:130px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,180,80,.28) 0%,transparent 70%);
+  }
+  .scene-inner{position:relative;}
+  .scene-time{
+    font-size:14px;font-weight:700;color:#FFB347;
+    letter-spacing:0.4px;text-transform:uppercase;
+    margin-bottom:6px;
+    text-shadow:0 1px 8px rgba(255,179,71,.4);
+  }
+  .scene-time .time-clock{color:#fff;opacity:.85;font-weight:600;margin-right:6px;}
+  .avatar-ring{
+    display:inline-block;padding:3px;
+    background:linear-gradient(135deg,#FFB347,#FF7A5C);
+    border-radius:50%;
+    box-shadow:0 0 16px rgba(255,122,92,.4);
+  }
+  .avatar{
+    width:48px;height:48px;
+    background:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:28px;line-height:1;
+  }
+  .scene-title{font-size:17px;font-weight:700;color:#fff;margin:8px 0 2px;line-height:1.2;}
+  .scene-desc{font-size:13px;color:rgba(255,255,255,.7);line-height:1.35;margin:0;}
+
+  .choice{
+    display:flex;align-items:center;gap:11px;
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:14px;
+    padding:9px 11px;margin-bottom:6px;
+    cursor:pointer;
+    transition:transform .1s,background .15s;
+  }
+  .choice:active{transform:scale(.97);background:rgba(255,255,255,.14);}
+  .choice-icon{
+    width:34px;height:34px;flex-shrink:0;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+  }
+  .ci-pos{background:linear-gradient(135deg,rgba(124,197,118,.45),rgba(93,202,165,.45));}
+  .ci-neg{background:linear-gradient(135deg,rgba(226,75,74,.45),rgba(199,56,56,.45));}
+  .ci-mix{background:linear-gradient(135deg,rgba(239,159,39,.45),rgba(255,122,92,.45));}
+  .ci-neu{background:linear-gradient(135deg,rgba(175,169,236,.4),rgba(127,119,221,.4));}
+  .choice-txt{flex:1;font-size:13.5px;font-weight:500;color:#fff;line-height:1.25;}
+  .choice-arrow{color:rgba(255,255,255,.4);font-size:18px;}
+
+  .toast{
+    position:fixed;top:140px;left:50%;
+    transform:translateX(-50%) translateY(-10px);
+    padding:10px 16px;
+    background:rgba(0,0,0,.78);
+    border-radius:20px;
+    border:1.5px solid #fff;
+    font-size:13px;font-weight:600;
+    opacity:0;pointer-events:none;
+    transition:opacity .25s,transform .25s;
+    z-index:100;white-space:nowrap;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .summary-icon{
+    display:inline-block;padding:6px;
+    background:linear-gradient(135deg,#FFB347 0%,#FF7A5C 100%);
+    border-radius:50%;
+    box-shadow:0 0 30px rgba(255,122,92,.4);
+  }
+  .summary-icon-inner{
+    width:96px;height:96px;
+    background:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:54px;line-height:1;
+  }
+  .delta-num{font-size:48px;font-weight:700;line-height:1;text-align:center;margin:6px 0;}
+  .delta-pos{color:#7CC576;}
+  .delta-neg{color:#E24B4A;}
+  .delta-zero{color:#AFA9EC;}
+
+  .log-row{
+    display:flex;align-items:flex-start;gap:8px;
+    padding:6px 0;
+    border-bottom:1px dashed rgba(255,255,255,.08);
+  }
+  .log-row:last-child{border-bottom:none;}
+  .log-time{width:56px;flex-shrink:0;font-size:11px;color:rgba(255,255,255,.5);font-weight:500;}
+  .log-text{flex:1;font-size:12px;color:#fff;line-height:1.4;}
+  .log-dir{font-size:12px;font-weight:600;flex-shrink:0;}
+  .log-pos{color:#7CC576;}
+  .log-neg{color:#E24B4A;}
+
+  .center{text-align:center;}
+  .mb-s{margin-bottom:8px;}
+  .mb-m{margin-bottom:14px;}
+  .mb-l{margin-bottom:24px;}
+  .mt-s{margin-top:8px;}
+  .mt-m{margin-top:14px;}
+  .mt-l{margin-top:24px;}
+  .gap-l{height:32px;}
+  .pad-l{padding:18px;}
+
+  .icon-btn{
+    background:none;border:none;
+    color:rgba(255,255,255,.7);
+    width:40px;height:40px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:20px;
+  }
+  .top-nav{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+  .step-pill{font-size:12px;color:rgba(255,255,255,.5);font-weight:500;}
+
+  .bullet-row{display:flex;align-items:center;gap:12px;padding:6px 0;}
+  .bullet-emoji{font-size:22px;}
+  .bullet-text{font-size:14px;font-weight:500;}
+
+  .toolbar{
+    display:flex;justify-content:center;gap:6px;
+    margin-top:10px;flex-wrap:wrap;
+  }
+  .toolbar button{
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    color:rgba(255,255,255,.45);
+    font:500 11px inherit;
+    padding:4px 10px;border-radius:10px;
+    cursor:pointer;
+  }
+  .toolbar button:active{background:rgba(255,255,255,.12);}
+
+  .sticky-cta{
+    position:fixed;
+    left:0;right:0;
+    bottom:0;
+    padding:18px 14px max(18px, calc(env(safe-area-inset-bottom) + 14px));
+    background:linear-gradient(180deg, rgba(26,16,51,0) 0%, rgba(26,16,51,.85) 35%, rgba(26,16,51,.96) 100%);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    z-index:50;
+    pointer-events:none;
+  }
+  .sticky-cta > *{pointer-events:auto;}
+  .sticky-cta-inner{max-width:440px;margin:0 auto;}
+  .summary-bottom-pad{height:110px;}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+
+const SAVE_KEY = "altoliv_save_v1";
+
+const TIME_SLOTS = [
+  {time:"7:00 AM",  label:"Morning"},
+  {time:"8:00 AM",  label:"Breakfast"},
+  {time:"10:00 AM", label:"Mid-morning"},
+  {time:"12:30 PM", label:"Lunch"},
+  {time:"2:00 PM",  label:"Afternoon"},
+  {time:"4:00 PM",  label:"Late afternoon"},
+  {time:"6:00 PM",  label:"Evening"},
+  {time:"7:30 PM",  label:"Dinner"},
+  {time:"9:00 PM",  label:"Night"},
+  {time:"10:30 PM", label:"Bedtime"},
+];
+
+const AVATARS = [
+  {id:"a1", emoji:"👨", label:"Guy"},
+  {id:"a2", emoji:"👩", label:"Girl"},
+  {id:"a3", emoji:"🥷", label:"Mystery"},
+];
+
+const TRAITS = [
+  {id:"kind",  emoji:"💖", label:"Kind",  desc:"+15 social"},
+  {id:"smart", emoji:"🧠", label:"Smart", desc:"+15 smarts"},
+  {id:"fit",   emoji:"💪", label:"Fit",   desc:"+15 health"},
+  {id:"lucky", emoji:"🍀", label:"Lucky", desc:"+10 to all"},
+];
+
+const POOLS = {
+  "Morning": [
+    {title:"Your alarm rings", desc:"It's 7:00 AM. The bed is so warm.", choices:[
+      {emoji:"⏰", label:"Get up right away",       e:{dir:3,health:4,happy:1},   tone:"pos"},
+      {emoji:"😴", label:"Snooze for 20 minutes",   e:{dir:-2,health:-2,happy:2}, tone:"mix"},
+      {emoji:"🛌", label:"Skip plans, sleep in",    e:{dir:-5,happy:3,money:-10}, tone:"neg"},
+    ]},
+    {title:"Out of bed", desc:"Time to face the day.", choices:[
+      {emoji:"🚿", label:"Hot shower & brush teeth",  e:{dir:3,health:4,happy:3},  tone:"pos"},
+      {emoji:"💦", label:"Just splash water on face", e:{dir:0,health:-1},         tone:"neu"},
+      {emoji:"🤢", label:"Skip washing up entirely",  e:{dir:-4,health:-3,social:-3}, tone:"neg"},
+    ]},
+    {title:"Pick today's outfit", desc:"What's the vibe?", choices:[
+      {emoji:"👔", label:"Sharp & put-together",    e:{dir:3,social:4,happy:3},   tone:"pos"},
+      {emoji:"👕", label:"Comfy casual",            e:{dir:1,happy:2},            tone:"neu"},
+      {emoji:"🩳", label:"Whatever's on the floor", e:{dir:-2,social:-3,happy:1}, tone:"neg"},
+    ]},
+  ],
+  "Breakfast": [
+    {title:"Breakfast time", desc:"You hear your stomach growl.", choices:[
+      {emoji:"🥗", label:"Healthy bowl & fresh juice", e:{dir:4,health:6,money:-8},          tone:"pos"},
+      {emoji:"🥐", label:"Quick toast & coffee",       e:{dir:1,health:1,money:-3},          tone:"neu"},
+      {emoji:"🍩", label:"Donuts and energy drink",    e:{dir:-3,health:-5,happy:3,money:-5},tone:"neg"},
+      {emoji:"🚫", label:"Skip breakfast entirely",    e:{dir:-4,health:-4,happy:-3},        tone:"neg"},
+    ]},
+    {title:"Family is at the table", desc:"They want to chat.", choices:[
+      {emoji:"☕", label:"Sit down and talk warmly",  e:{dir:4,social:6,happy:4},  tone:"pos"},
+      {emoji:"📱", label:"Scroll your phone instead", e:{dir:-2,social:-4,happy:1},tone:"neg"},
+      {emoji:"🚪", label:"Eat fast and rush out",     e:{dir:-1,social:-2},        tone:"neu"},
+    ]},
+  ],
+  "Mid-morning": [
+    {title:"You arrive at work", desc:"A coworker waves hello.", choices:[
+      {emoji:"😊", label:"Greet everyone warmly",       e:{dir:3,social:5,happy:3},   tone:"pos"},
+      {emoji:"🎧", label:"Headphones on, focus mode",   e:{dir:2,smarts:4,social:-2}, tone:"neu"},
+      {emoji:"😒", label:"Walk past, ignore them",      e:{dir:-3,social:-5},         tone:"neg"},
+    ]},
+    {title:"A tough task lands on you", desc:"Tight deadline. Big stakes.", choices:[
+      {emoji:"💪", label:"Tackle it head-on",            e:{dir:5,smarts:5,money:30,happy:-2}, tone:"pos"},
+      {emoji:"🤝", label:"Ask a teammate for help",      e:{dir:4,social:5,smarts:3,money:15}, tone:"pos"},
+      {emoji:"🤷", label:"Push it to tomorrow",          e:{dir:-5,money:-20,smarts:-2},       tone:"neg"},
+    ]},
+    {title:"Boss sends a message", desc:"They want a quick call.", choices:[
+      {emoji:"📞", label:"Call right back",                  e:{dir:3,money:20,happy:-1},     tone:"pos"},
+      {emoji:"📝", label:"Reply with thoughtful notes",      e:{dir:4,smarts:4,money:15},     tone:"pos"},
+      {emoji:"😶", label:"Pretend you didn't see it",        e:{dir:-6,money:-30,social:-3},  tone:"neg"},
+    ]},
+  ],
+  "Lunch": [
+    {title:"Lunch break", desc:"Where to eat?", choices:[
+      {emoji:"🥙", label:"Healthy meal-prep from home", e:{dir:4,health:5,money:8},                         tone:"pos"},
+      {emoji:"🍕", label:"Pizza with coworkers",        e:{dir:2,social:5,happy:4,money:-15,health:-3},     tone:"mix"},
+      {emoji:"🍔", label:"Solo fast food binge",        e:{dir:-3,health:-6,happy:2,money:-12},             tone:"neg"},
+    ]},
+    {title:"Old friend texts", desc:"\"Free for lunch?\"", choices:[
+      {emoji:"🍜", label:"Meet up and catch up",     e:{dir:5,social:8,happy:6,money:-18}, tone:"pos"},
+      {emoji:"📅", label:"Reschedule for later",     e:{dir:1,social:1},                   tone:"neu"},
+      {emoji:"❌", label:"Leave them on read",        e:{dir:-4,social:-6,happy:-3},        tone:"neg"},
+    ]},
+  ],
+  "Afternoon": [
+    {title:"Energy slump hits", desc:"Eyes feel heavy.", choices:[
+      {emoji:"🚶", label:"Take a 10-min walk outside",   e:{dir:4,health:5,happy:5},       tone:"pos"},
+      {emoji:"☕", label:"Grab another coffee",           e:{dir:1,health:-2,happy:2,money:-5}, tone:"neu"},
+      {emoji:"🍫", label:"Eat sugar and push through",   e:{dir:-2,health:-4,happy:2},     tone:"neg"},
+    ]},
+    {title:"A coworker is gossiping", desc:"They want you to join in.", choices:[
+      {emoji:"🙅", label:"Politely change the topic", e:{dir:5,social:3,happy:2},   tone:"pos"},
+      {emoji:"👂", label:"Listen but stay quiet",     e:{dir:-1},                   tone:"neu"},
+      {emoji:"🗣️", label:"Add fuel to the gossip",   e:{dir:-5,social:-4,happy:-2},tone:"neg"},
+    ]},
+  ],
+  "Late afternoon": [
+    {title:"Big decision at work", desc:"Long-term project planning.", choices:[
+      {emoji:"📊", label:"Prepare a careful proposal",  e:{dir:5,smarts:6,money:40,happy:-2}, tone:"pos"},
+      {emoji:"💡", label:"Pitch a bold creative idea",  e:{dir:4,smarts:4,social:4,money:25}, tone:"pos"},
+      {emoji:"🚪", label:"Stay quiet, leave at five",   e:{dir:-3,money:-10,smarts:-2},       tone:"neg"},
+    ]},
+    {title:"You finish early", desc:"Bonus time. What now?", choices:[
+      {emoji:"📚", label:"Take an online course", e:{dir:4,smarts:7,money:-10}, tone:"pos"},
+      {emoji:"🏃", label:"Go to the gym",          e:{dir:5,health:8,happy:4},  tone:"pos"},
+      {emoji:"🎮", label:"Play games at home",     e:{dir:0,happy:5,health:-2}, tone:"neu"},
+    ]},
+  ],
+  "Evening": [
+    {title:"Heading home", desc:"How do you wind down?", choices:[
+      {emoji:"🌳", label:"Walk through the park",         e:{dir:4,health:4,happy:5}, tone:"pos"},
+      {emoji:"🚇", label:"Listen to a podcast on transit",e:{dir:3,smarts:4,happy:3}, tone:"pos"},
+      {emoji:"🚗", label:"Sit in traffic, fume",          e:{dir:-2,happy:-4},        tone:"neg"},
+    ]},
+    {title:"Partner texts you", desc:"\"Want to do something tonight?\"", choices:[
+      {emoji:"❤️", label:"Plan a sweet date",        e:{dir:6,social:6,happy:8,money:-30}, tone:"pos"},
+      {emoji:"🛋️", label:"Suggest a cozy night in",  e:{dir:4,social:5,happy:6},           tone:"pos"},
+      {emoji:"😪", label:"\"Sorry, too tired.\"",     e:{dir:-4,social:-5,happy:-4},        tone:"neg"},
+    ]},
+  ],
+  "Dinner": [
+    {title:"Dinner choice", desc:"Stomach is grumbling again.", choices:[
+      {emoji:"🍳", label:"Cook a real meal at home",  e:{dir:4,health:6,happy:4,money:-10}, tone:"pos"},
+      {emoji:"🥡", label:"Order takeout",              e:{dir:0,happy:3,money:-25,health:-2},tone:"neu"},
+      {emoji:"🍷", label:"Eat at a fancy restaurant", e:{dir:2,social:4,happy:6,money:-60}, tone:"mix"},
+    ]},
+    {title:"Someone calls during dinner", desc:"Mom on the line.", choices:[
+      {emoji:"💕", label:"Pick up and chat for a while", e:{dir:5,social:6,happy:7},   tone:"pos"},
+      {emoji:"⏳", label:"Promise to call her back",     e:{dir:0,social:-1},          tone:"neu"},
+      {emoji:"🔇", label:"Decline the call",             e:{dir:-4,social:-5,happy:-3},tone:"neg"},
+    ]},
+  ],
+  "Night": [
+    {title:"Free time at last", desc:"How do you spend it?", choices:[
+      {emoji:"📖", label:"Read a book",                e:{dir:4,smarts:6,happy:4},  tone:"pos"},
+      {emoji:"📺", label:"Binge a TV series",          e:{dir:0,happy:5,health:-2}, tone:"neu"},
+      {emoji:"📱", label:"Doom-scroll on your phone",  e:{dir:-3,happy:-3,health:-2}, tone:"neg"},
+      {emoji:"🎨", label:"Work on a hobby project",    e:{dir:5,happy:7,smarts:4},  tone:"pos"},
+    ]},
+    {title:"Friends invite you out", desc:"Drinks at the bar tonight.", choices:[
+      {emoji:"🍹", label:"One drink, then home",  e:{dir:3,social:5,happy:5,money:-15},      tone:"pos"},
+      {emoji:"🎉", label:"Stay out till 2 AM",    e:{dir:-3,social:6,happy:6,money:-50,health:-6}, tone:"mix"},
+      {emoji:"🛌", label:"Stay home and rest",    e:{dir:2,health:4,social:-2},              tone:"neu"},
+    ]},
+  ],
+  "Bedtime": [
+    {title:"Time for bed", desc:"How do you wind down?", choices:[
+      {emoji:"🧘", label:"Stretch & meditate 5 mins",   e:{dir:5,health:6,happy:5},  tone:"pos"},
+      {emoji:"🪥", label:"Brush teeth & sleep",          e:{dir:3,health:3,happy:2},  tone:"pos"},
+      {emoji:"📱", label:"Stay on your phone in bed",   e:{dir:-3,health:-3,happy:-1},tone:"neg"},
+    ]},
+    {title:"Reflect on your day", desc:"One last thought before sleep.", choices:[
+      {emoji:"🙏", label:"List three things you're grateful for", e:{dir:5,happy:7},          tone:"pos"},
+      {emoji:"📓", label:"Plan tomorrow in your journal",         e:{dir:4,smarts:4,happy:3}, tone:"pos"},
+      {emoji:"😟", label:"Worry about everything",                 e:{dir:-4,health:-3,happy:-5},tone:"neg"},
+    ]},
+  ],
+};
+
+let S = null;
+
+function defaultState(){
+  return {
+    phase:"intro",
+    name:"",
+    avatarId:null,
+    traitId:null,
+    day:1,
+    slotIdx:0,
+    daySlots:[],
+    direction:0,
+    dayStartDir:0,
+    money:200,
+    health:70,
+    happy:70,
+    smarts:50,
+    social:50,
+    job:"Student",
+    relationship:"Single",
+    log:[],
+  };
+}
+
+function load(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return Object.assign(defaultState(), parsed);
+  } catch (e) { return null; }
+}
+
+function save(){
+  try {
+    const toSave = Object.assign({}, S);
+    delete toSave.daySlots;
+    localStorage.setItem(SAVE_KEY, JSON.stringify(toSave));
+  } catch(e){}
+}
+
+function clearSave(){
+  try { localStorage.removeItem(SAVE_KEY); } catch(e){}
+}
+
+function clamp(v,lo,hi){ return v<lo?lo:(v>hi?hi:v); }
+
+function applyEffect(e){
+  if (!e) return;
+  S.direction = clamp(S.direction + (e.dir||0), -100, 100);
+  S.money     = clamp(S.money     + (e.money||0), -999, 999999);
+  S.health    = clamp(S.health    + (e.health||0), 0, 100);
+  S.happy     = clamp(S.happy     + (e.happy||0), 0, 100);
+  S.smarts    = clamp(S.smarts    + (e.smarts||0), 0, 100);
+  S.social    = clamp(S.social    + (e.social||0), 0, 100);
+}
+
+function applyTrait(){
+  switch(S.traitId){
+    case "kind":  S.social = clamp(S.social + 15, 0, 100); break;
+    case "smart": S.smarts = clamp(S.smarts + 15, 0, 100); break;
+    case "fit":   S.health = clamp(S.health + 15, 0, 100); break;
+    case "lucky":
+      S.social = clamp(S.social + 10, 0, 100);
+      S.smarts = clamp(S.smarts + 10, 0, 100);
+      S.health = clamp(S.health + 10, 0, 100);
+      S.happy  = clamp(S.happy  + 10, 0, 100);
+      break;
+  }
+}
+
+function dirLabel(d){
+  if (d < -60) return "Spiraling";
+  if (d < -25) return "Struggling";
+  if (d < -8)  return "A bit rough";
+  if (d <= 8)  return "Steady";
+  if (d <= 25) return "Going well";
+  if (d <= 60) return "Thriving";
+  return "Living the dream";
+}
+
+function dirDot(d){
+  if (d < -25) return "#FF3B47";
+  if (d < -8)  return "#FF9D2E";
+  if (d <= 8)  return "#AFA9EC";
+  if (d <= 25) return "#5FE07A";
+  return "#00C77C";
+}
+
+function avatarEmoji(){
+  const a = AVATARS.find(x=>x.id===S.avatarId);
+  return a ? a.emoji : "🙂";
+}
+
+function buildDay(){
+  const slots = [];
+  for (const t of TIME_SLOTS) {
+    const pool = POOLS[t.label] || POOLS.Afternoon;
+    const ev = pool[Math.floor(Math.random()*pool.length)];
+    slots.push({time:t.time, label:t.label, event:ev});
+  }
+  S.daySlots = slots;
+  if (S.slotIdx === 0) S.dayStartDir = S.direction;
+}
+
+function showToast(msg, color){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.borderColor = color || "#fff";
+  t.style.boxShadow = "0 0 12px " + (color||"#fff") + "55";
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.classList.remove("show"), 1300);
+}
+
+function el(tag, attrs, children){
+  const e = document.createElement(tag);
+  if (attrs) {
+    for (const k in attrs) {
+      if (k === "class") e.className = attrs[k];
+      else if (k === "html") e.innerHTML = attrs[k];
+      else if (k.startsWith("on")) e.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else if (k === "style" && typeof attrs[k] === "object") Object.assign(e.style, attrs[k]);
+      else e.setAttribute(k, attrs[k]);
+    }
+  }
+  if (children) {
+    if (typeof children === "string") e.textContent = children;
+    else if (Array.isArray(children)) children.forEach(c => c && e.appendChild(typeof c === "string" ? document.createTextNode(c) : c));
+    else e.appendChild(children);
+  }
+  return e;
+}
+
+function render(){
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+  switch(S.phase){
+    case "intro":      renderIntro(app); break;
+    case "name":       renderName(app); break;
+    case "avatar":     renderAvatar(app); break;
+    case "trait":      renderTrait(app); break;
+    case "play":       renderPlay(app); break;
+    case "daySummary": renderDaySummary(app); break;
+  }
+  window.scrollTo(0, 0);
+}
+
+function renderIntro(app){
+  const hasSave = !!localStorage.getItem(SAVE_KEY) && S.name;
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("div", {class:"center mb-m"}, [
+    el("div", {style:{display:"inline-block",padding:"8px",background:"linear-gradient(135deg,#FFB347,#FF7A5C)",borderRadius:"50%",boxShadow:"0 0 30px rgba(255,122,92,.4)"}}, [
+      el("div", {style:{width:"96px",height:"96px",background:"#fff",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"54px"}}, "🌟")
+    ])
+  ]));
+  app.appendChild(el("div", {class:"center mb-s"}, el("h1", {class:"h1"}, "AltoLiv")));
+  app.appendChild(el("div", {class:"center text-sec mb-l"}, hasSave ? "Welcome back, " + S.name + "!" : "Every choice shapes your destiny"));
+
+  if (hasSave) {
+    const needlePct = ((S.direction + 100) / 200) * 100;
+    const dirColor = dirDot(S.direction);
+    app.appendChild(el("div", {class:"glass meter-card mb-m"}, [
+      el("div", {class:"meter-head"}, [
+        el("div", {class:"label-tiny"}, "LIFE DIRECTION"),
+        el("div", {class:"meter-status"}, [
+          el("div", {class:"meter-dot", style:{background:dirColor, boxShadow:"0 0 10px "+dirColor}}),
+          el("span", null, dirLabel(S.direction))
+        ])
+      ]),
+      el("div", {class:"meter-track"}, [
+        el("div", {class:"meter-needle", style:{left:"calc("+needlePct.toFixed(1)+"% - 2px)"}}),
+      ]),
+      el("div", {class:"meter-foot"}, [
+        el("span",{class:"text-faint"},"Bad"),
+        el("span",{class:"text-faint"},"Neutral"),
+        el("span",{class:"text-faint"},"Great"),
+      ]),
+    ]));
+    app.appendChild(el("div", {class:"stats mb-l"}, [
+      statTile("❤️", S.health, "Health"),
+      statTile("😊", S.happy, "Happy"),
+      statTile("🧠", S.smarts, "Brain"),
+      statTile("💰", "$"+S.money, "Money"),
+    ]));
+    app.appendChild(el("button", {class:"btn-primary btn-xl", onclick:()=>{ S.phase="play"; if (S.daySlots.length!==10) buildDay(); render(); }}, [
+      el("span", null, "Continue · Day " + S.day),
+      el("span", null, "▶")
+    ]));
+    app.appendChild(el("div", {class:"center mt-s"},
+      el("button", {class:"btn-text", onclick:()=>{ if(confirm("Start a new life? This erases your current progress.")){ clearSave(); S = defaultState(); S.phase="name"; render(); } }}, [
+        el("span", {style:{marginRight:"6px"}}, "↻"),
+        el("span", null, "Start a new life"),
+      ])
+    ));
+  } else {
+    app.appendChild(el("div", {class:"glass pad-l mb-l"}, [
+      el("div", {class:"bullet-row"}, [el("span",{class:"bullet-emoji"},"🌅"), el("span",{class:"bullet-text"},"10 choices each day")]),
+      el("div", {class:"bullet-row"}, [el("span",{class:"bullet-emoji"},"📈"), el("span",{class:"bullet-text"},"Watch your life meter rise or fall")]),
+      el("div", {class:"bullet-row"}, [el("span",{class:"bullet-emoji"},"💾"), el("span",{class:"bullet-text"},"Auto-saves on this device")]),
+    ]));
+    app.appendChild(el("button", {class:"btn-primary btn-xl", onclick:()=>{ S = defaultState(); S.phase="name"; render(); }}, [
+      el("span", null, "Begin your story"),
+      el("span", null, "→")
+    ]));
+  }
+}
+
+function renderName(app){
+  app.appendChild(el("div", {class:"top-nav"}, [
+    el("button", {class:"icon-btn", onclick:()=>{ S.phase="intro"; render(); }}, "←"),
+    el("span", {class:"step-pill"}, "Step 1 of 3"),
+  ]));
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("h1", {class:"h1 mb-s"}, "What's your name?"));
+  app.appendChild(el("div", {class:"text-sec mb-l"}, "This is who you'll be in this world."));
+  const input = el("input", {class:"input", type:"text", maxlength:"14", placeholder:"Type your name...", value:S.name||""});
+  app.appendChild(input);
+  app.appendChild(el("div", {class:"gap-l"}));
+  const next = ()=>{
+    const v = input.value.trim();
+    if(!v){ showToast("Please enter a name", "#EF9F27"); return; }
+    S.name = v; S.phase = "avatar"; render();
+  };
+  input.addEventListener("keydown", (e)=>{ if(e.key==="Enter") next(); });
+  app.appendChild(el("button", {class:"btn-primary", onclick:next}, [el("span",null,"Continue"), el("span",null,"→")]));
+  setTimeout(()=>input.focus(), 50);
+}
+
+function renderAvatar(app){
+  app.appendChild(el("div", {class:"top-nav"}, [
+    el("button", {class:"icon-btn", onclick:()=>{ S.phase="name"; render(); }}, "←"),
+    el("span", {class:"step-pill"}, "Step 2 of 3"),
+  ]));
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("h1", {class:"h1 mb-s"}, "Hi, " + S.name + "!"));
+  app.appendChild(el("div", {class:"text-sec mb-l"}, "Pick your character."));
+  const grid = el("div", {class:"pick-grid mb-l", style:{gridTemplateColumns:"1fr 1fr 1fr"}});
+  AVATARS.forEach(a=>{
+    const cls = "pick" + (S.avatarId===a.id ? " selected" : "");
+    grid.appendChild(el("div", {class:cls, style:{padding:"14px 4px"}, onclick:()=>{ S.avatarId = a.id; render(); }}, [
+      el("div", {class:"pick-emoji", style:{fontSize:"42px"}}, a.emoji),
+      el("div", {class:"pick-label"}, a.label),
+    ]));
+  });
+  app.appendChild(grid);
+  app.appendChild(el("button", {class:"btn-primary", onclick:()=>{
+    if(!S.avatarId){ showToast("Pick a character", "#EF9F27"); return; }
+    S.phase = "trait"; render();
+  }}, [el("span",null,"Continue"), el("span",null,"→")]));
+}
+
+function renderTrait(app){
+  app.appendChild(el("div", {class:"top-nav"}, [
+    el("button", {class:"icon-btn", onclick:()=>{ S.phase="avatar"; render(); }}, "←"),
+    el("span", {class:"step-pill"}, "Step 3 of 3"),
+  ]));
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("h1", {class:"h1 mb-s"}, "Pick a starting trait"));
+  app.appendChild(el("div", {class:"text-sec mb-l"}, "A small head start in life."));
+  const grid = el("div", {class:"pick-grid mb-l"});
+  TRAITS.forEach(t=>{
+    const cls = "pick teal" + (S.traitId===t.id ? " selected" : "");
+    grid.appendChild(el("div", {class:cls, onclick:()=>{ S.traitId = t.id; render(); }}, [
+      el("div", {class:"pick-emoji", style:{fontSize:"40px"}}, t.emoji),
+      el("div", {class:"pick-label"}, t.label),
+      el("div", {class:"pick-desc"}, t.desc),
+    ]));
+  });
+  app.appendChild(grid);
+  app.appendChild(el("button", {class:"btn-primary", onclick:()=>{
+    if(!S.traitId){ showToast("Pick a trait", "#EF9F27"); return; }
+    applyTrait();
+    buildDay();
+    S.phase = "play";
+    save();
+    render();
+  }}, [el("span",null,"Begin day 1"), el("span",null,"▶")]));
+}
+
+function renderPlay(app){
+  if (S.daySlots.length !== 10) buildDay();
+  const slot = S.daySlots[S.slotIdx];
+  const ev = slot.event;
+  const needlePct = ((S.direction + 100) / 200) * 100;
+  const dirColor = dirDot(S.direction);
+
+  app.appendChild(el("div", {class:"top-row"}, [
+    el("div", {class:"day-chip"}, [
+      el("span", {style:{color:"#FFB347"}}, "📅"),
+      el("span", null, "Day " + S.day + " · " + (S.slotIdx+1) + "/10")
+    ]),
+  ]));
+
+  const meter = el("div", {class:"glass meter-card"}, [
+    el("div", {class:"meter-head"}, [
+      el("div", {class:"label-tiny"}, "LIFE DIRECTION"),
+      el("div", {class:"meter-status"}, [
+        el("div", {class:"meter-dot", style:{background:dirColor, boxShadow:"0 0 10px "+dirColor}}),
+        el("span", null, dirLabel(S.direction))
+      ])
+    ]),
+    el("div", {class:"meter-track"}, [
+      el("div", {class:"meter-needle", style:{left:"calc("+needlePct.toFixed(1)+"% - 2px)"}}),
+    ]),
+    el("div", {class:"meter-foot"}, [
+      el("span",{class:"text-faint"},"Bad"),
+      el("span",{class:"text-faint"},"Neutral"),
+      el("span",{class:"text-faint"},"Great"),
+    ]),
+  ]);
+  app.appendChild(meter);
+
+  const dots = el("div", {class:"progress"});
+  for (let i=0; i<10; i++) {
+    const cls = i < S.slotIdx ? "pdot done" : (i === S.slotIdx ? "pdot now" : "pdot");
+    dots.appendChild(el("div", {class:cls}));
+  }
+  app.appendChild(dots);
+
+  app.appendChild(el("div", {class:"stats"}, [
+    statTile("❤️", S.health, "Health"),
+    statTile("😊", S.happy, "Happy"),
+    statTile("🧠", S.smarts, "Brain"),
+    statTile("💰", "$"+S.money, "Money"),
+  ]));
+
+  app.appendChild(el("div", {class:"scene"}, [
+    el("div", {class:"scene-inner"}, [
+      el("div", {class:"scene-time"}, [
+        el("span", {class:"time-clock"}, slot.time),
+        el("span", null, slot.label),
+      ]),
+      el("div", null, el("div", {class:"avatar-ring"}, el("div", {class:"avatar"}, avatarEmoji()))),
+      el("div", {class:"scene-title"}, ev.title),
+      el("div", {class:"scene-desc"}, ev.desc),
+    ])
+  ]));
+
+  ev.choices.forEach(c=>{
+    const ic = "choice-icon ci-" + (c.tone || "neu");
+    app.appendChild(el("div", {class:"choice", onclick:()=>onChoice(c, ev, slot)}, [
+      el("div", {class:ic}, c.emoji),
+      el("div", {class:"choice-txt"}, c.label),
+      el("div", {class:"choice-arrow"}, "›"),
+    ]));
+  });
+
+  app.appendChild(el("div", {class:"toolbar"}, [
+    el("button", {onclick:()=>{ if(confirm("Start a new life? This erases your current progress.")){ clearSave(); S = defaultState(); S.phase="intro"; render(); } }}, "↺ New life"),
+    el("button", {onclick:()=>{ S.phase="intro"; render(); }}, "← Home"),
+  ]));
+}
+
+function statTile(icon, val, label){
+  return el("div", {class:"stat"}, [
+    el("div", {class:"stat-icon"}, icon),
+    el("div", {class:"stat-val"}, String(val)),
+    el("div", {class:"stat-lbl"}, label),
+  ]);
+}
+
+function onChoice(choice, ev, slot){
+  applyEffect(choice.e);
+  S.log.unshift({day:S.day, time:slot.time, text: ev.title + " → " + choice.label, dir:(choice.e&&choice.e.dir)||0});
+  if (S.log.length > 100) S.log.pop();
+  const d = (choice.e && choice.e.dir) || 0;
+  if (d > 0) showToast("+" + d + " life ✨", "#7CC576");
+  else if (d < 0) showToast(d + " life 💔", "#E24B4A");
+  else showToast("No change", "#AFA9EC");
+  S.slotIdx += 1;
+  save();
+  if (S.slotIdx >= 10) {
+    setTimeout(()=>{ S.phase = "daySummary"; render(); }, 350);
+  } else {
+    setTimeout(render, 300);
+  }
+}
+
+function renderDaySummary(app){
+  const delta = S.direction - S.dayStartDir;
+  const moonEmoji = delta > 15 ? "🌟" : delta > 5 ? "✨" : delta < -15 ? "🌧️" : delta < -5 ? "☁️" : "🌙";
+  const verdict = delta > 15 ? "A wonderful day! Keep it up." :
+                  delta > 5  ? "A good day overall." :
+                  delta < -15? "A really rough day." :
+                  delta < -5 ? "A bumpy day." : "A pretty steady day.";
+  const deltaCls = delta > 5 ? "delta-pos" : delta < -5 ? "delta-neg" : "delta-zero";
+
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("div", {class:"center mb-m"}, [
+    el("div", {class:"summary-icon"}, el("div", {class:"summary-icon-inner"}, moonEmoji))
+  ]));
+  app.appendChild(el("h2", {class:"h2 center mb-s"}, "Day " + S.day + " complete"));
+  app.appendChild(el("div", {class:"text-mut center"}, "Life-meter change today"));
+  app.appendChild(el("div", {class:"delta-num " + deltaCls}, (delta>0?"+":"") + delta));
+  app.appendChild(el("div", {class:"text-sec center mb-s"}, verdict));
+  app.appendChild(el("div", {class:"center mb-l"}, [
+    el("span", {class:"text-mut"}, "Now at: "),
+    el("span", {style:{fontWeight:"600",color:"#fff"}}, dirLabel(S.direction)),
+  ]));
+
+  app.appendChild(el("div", {class:"stats"}, [
+    statTile("❤️", S.health, "Health"),
+    statTile("😊", S.happy, "Happy"),
+    statTile("🧠", S.smarts, "Brain"),
+    statTile("💰", "$"+S.money, "Money"),
+  ]));
+
+  app.appendChild(el("div", {class:"label-tiny mb-s mt-l", style:{paddingLeft:"4px"}}, "TODAY'S CHOICES"));
+  const todays = S.log.filter(l => l.day === S.day);
+  const logBox = el("div", {class:"glass", style:{padding:"10px 14px"}});
+  if (todays.length === 0) {
+    logBox.appendChild(el("div", {class:"text-mut"}, "No choices logged."));
+  } else {
+    todays.slice().reverse().forEach(l=>{
+      const dirCls = l.dir > 0 ? "log-dir log-pos" : l.dir < 0 ? "log-dir log-neg" : "log-dir";
+      const row = el("div", {class:"log-row"}, [
+        el("div", {class:"log-time"}, l.time),
+        el("div", {class:"log-text"}, l.text),
+      ]);
+      if (l.dir !== 0) row.appendChild(el("div", {class:dirCls}, (l.dir>0?"+":"") + l.dir));
+      logBox.appendChild(row);
+    });
+  }
+  app.appendChild(logBox);
+
+  app.appendChild(el("div", {class:"summary-bottom-pad"}));
+  app.appendChild(el("div", {class:"sticky-cta"},
+    el("div", {class:"sticky-cta-inner"},
+      el("div", {class:"cta-row"}, [
+        el("button", {class:"btn-secondary", onclick:()=>{
+          S.day += 1;
+          S.slotIdx = 0;
+          S.daySlots = [];
+          save();
+          S.phase = "intro";
+          render();
+        }, "aria-label":"Go to home"}, [
+          el("span", {style:{fontSize:"18px",lineHeight:"1"}}, "🏠"),
+          el("span", null, "Home"),
+        ]),
+        el("button", {class:"btn-primary", onclick:()=>{
+          S.day += 1;
+          S.slotIdx = 0;
+          S.daySlots = [];
+          buildDay();
+          S.phase = "play";
+          save();
+          render();
+        }}, [el("span", null, "Sleep & start day " + (S.day+1)), el("span", null, "🌙")]),
+      ])
+    )
+  ));
+}
+
+const loaded = load();
+if (loaded && loaded.name) {
+  S = loaded;
+  S.phase = "intro";
+  if (S.daySlots) S.daySlots = [];
+} else {
+  S = defaultState();
+}
+render();
+</script>
+</body>
+</html>
