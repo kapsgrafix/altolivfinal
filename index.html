@@ -387,140 +387,902 @@ const TRAITS = [
   {id:"lucky", emoji:"🍀", label:"Lucky", desc:"+10 to all"},
 ];
 
-const POOLS = {
-  "Morning": [
-    {title:"Your alarm rings", desc:"It's 7:00 AM. The bed is so warm.", choices:[
-      {emoji:"⏰", label:"Get up right away",       e:{dir:3,health:4,happy:1},   tone:"pos"},
-      {emoji:"😴", label:"Snooze for 20 minutes",   e:{dir:-2,health:-2,happy:2}, tone:"mix"},
-      {emoji:"🛌", label:"Skip plans, sleep in",    e:{dir:-5,happy:3,money:-10}, tone:"neg"},
-    ]},
-    {title:"Out of bed", desc:"Time to face the day.", choices:[
-      {emoji:"🚿", label:"Hot shower & brush teeth",  e:{dir:3,health:4,happy:3},  tone:"pos"},
-      {emoji:"💦", label:"Just splash water on face", e:{dir:0,health:-1},         tone:"neu"},
-      {emoji:"🤢", label:"Skip washing up entirely",  e:{dir:-4,health:-3,social:-3}, tone:"neg"},
-    ]},
-    {title:"Pick today's outfit", desc:"What's the vibe?", choices:[
-      {emoji:"👔", label:"Sharp & put-together",    e:{dir:3,social:4,happy:3},   tone:"pos"},
-      {emoji:"👕", label:"Comfy casual",            e:{dir:1,happy:2},            tone:"neu"},
-      {emoji:"🩳", label:"Whatever's on the floor", e:{dir:-2,social:-3,happy:1}, tone:"neg"},
-    ]},
-  ],
-  "Breakfast": [
-    {title:"Breakfast time", desc:"You hear your stomach growl.", choices:[
-      {emoji:"🥗", label:"Healthy bowl & fresh juice", e:{dir:4,health:6,money:-8},          tone:"pos"},
-      {emoji:"🥐", label:"Quick toast & coffee",       e:{dir:1,health:1,money:-3},          tone:"neu"},
-      {emoji:"🍩", label:"Donuts and energy drink",    e:{dir:-3,health:-5,happy:3,money:-5},tone:"neg"},
-      {emoji:"🚫", label:"Skip breakfast entirely",    e:{dir:-4,health:-4,happy:-3},        tone:"neg"},
-    ]},
-    {title:"Family is at the table", desc:"They want to chat.", choices:[
-      {emoji:"☕", label:"Sit down and talk warmly",  e:{dir:4,social:6,happy:4},  tone:"pos"},
-      {emoji:"📱", label:"Scroll your phone instead", e:{dir:-2,social:-4,happy:1},tone:"neg"},
-      {emoji:"🚪", label:"Eat fast and rush out",     e:{dir:-1,social:-2},        tone:"neu"},
-    ]},
-  ],
-  "Mid-morning": [
-    {title:"You arrive at work", desc:"A coworker waves hello.", choices:[
-      {emoji:"😊", label:"Greet everyone warmly",       e:{dir:3,social:5,happy:3},   tone:"pos"},
-      {emoji:"🎧", label:"Headphones on, focus mode",   e:{dir:2,smarts:4,social:-2}, tone:"neu"},
-      {emoji:"😒", label:"Walk past, ignore them",      e:{dir:-3,social:-5},         tone:"neg"},
-    ]},
-    {title:"A tough task lands on you", desc:"Tight deadline. Big stakes.", choices:[
-      {emoji:"💪", label:"Tackle it head-on",            e:{dir:5,smarts:5,money:30,happy:-2}, tone:"pos"},
-      {emoji:"🤝", label:"Ask a teammate for help",      e:{dir:4,social:5,smarts:3,money:15}, tone:"pos"},
-      {emoji:"🤷", label:"Push it to tomorrow",          e:{dir:-5,money:-20,smarts:-2},       tone:"neg"},
-    ]},
-    {title:"Boss sends a message", desc:"They want a quick call.", choices:[
-      {emoji:"📞", label:"Call right back",                  e:{dir:3,money:20,happy:-1},     tone:"pos"},
-      {emoji:"📝", label:"Reply with thoughtful notes",      e:{dir:4,smarts:4,money:15},     tone:"pos"},
-      {emoji:"😶", label:"Pretend you didn't see it",        e:{dir:-6,money:-30,social:-3},  tone:"neg"},
-    ]},
-  ],
-  "Lunch": [
-    {title:"Lunch break", desc:"Where to eat?", choices:[
-      {emoji:"🥙", label:"Healthy meal-prep from home", e:{dir:4,health:5,money:8},                         tone:"pos"},
-      {emoji:"🍕", label:"Pizza with coworkers",        e:{dir:2,social:5,happy:4,money:-15,health:-3},     tone:"mix"},
-      {emoji:"🍔", label:"Solo fast food binge",        e:{dir:-3,health:-6,happy:2,money:-12},             tone:"neg"},
-    ]},
-    {title:"Old friend texts", desc:"\"Free for lunch?\"", choices:[
-      {emoji:"🍜", label:"Meet up and catch up",     e:{dir:5,social:8,happy:6,money:-18}, tone:"pos"},
-      {emoji:"📅", label:"Reschedule for later",     e:{dir:1,social:1},                   tone:"neu"},
-      {emoji:"❌", label:"Leave them on read",        e:{dir:-4,social:-6,happy:-3},        tone:"neg"},
-    ]},
-  ],
-  "Afternoon": [
-    {title:"Energy slump hits", desc:"Eyes feel heavy.", choices:[
-      {emoji:"🚶", label:"Take a 10-min walk outside",   e:{dir:4,health:5,happy:5},       tone:"pos"},
-      {emoji:"☕", label:"Grab another coffee",           e:{dir:1,health:-2,happy:2,money:-5}, tone:"neu"},
-      {emoji:"🍫", label:"Eat sugar and push through",   e:{dir:-2,health:-4,happy:2},     tone:"neg"},
-    ]},
-    {title:"A coworker is gossiping", desc:"They want you to join in.", choices:[
-      {emoji:"🙅", label:"Politely change the topic", e:{dir:5,social:3,happy:2},   tone:"pos"},
-      {emoji:"👂", label:"Listen but stay quiet",     e:{dir:-1},                   tone:"neu"},
-      {emoji:"🗣️", label:"Add fuel to the gossip",   e:{dir:-5,social:-4,happy:-2},tone:"neg"},
-    ]},
-  ],
-  "Late afternoon": [
-    {title:"Big decision at work", desc:"Long-term project planning.", choices:[
-      {emoji:"📊", label:"Prepare a careful proposal",  e:{dir:5,smarts:6,money:40,happy:-2}, tone:"pos"},
-      {emoji:"💡", label:"Pitch a bold creative idea",  e:{dir:4,smarts:4,social:4,money:25}, tone:"pos"},
-      {emoji:"🚪", label:"Stay quiet, leave at five",   e:{dir:-3,money:-10,smarts:-2},       tone:"neg"},
-    ]},
-    {title:"You finish early", desc:"Bonus time. What now?", choices:[
-      {emoji:"📚", label:"Take an online course", e:{dir:4,smarts:7,money:-10}, tone:"pos"},
-      {emoji:"🏃", label:"Go to the gym",          e:{dir:5,health:8,happy:4},  tone:"pos"},
-      {emoji:"🎮", label:"Play games at home",     e:{dir:0,happy:5,health:-2}, tone:"neu"},
-    ]},
-  ],
-  "Evening": [
-    {title:"Heading home", desc:"How do you wind down?", choices:[
-      {emoji:"🌳", label:"Walk through the park",         e:{dir:4,health:4,happy:5}, tone:"pos"},
-      {emoji:"🚇", label:"Listen to a podcast on transit",e:{dir:3,smarts:4,happy:3}, tone:"pos"},
-      {emoji:"🚗", label:"Sit in traffic, fume",          e:{dir:-2,happy:-4},        tone:"neg"},
-    ]},
-    {title:"Partner texts you", desc:"\"Want to do something tonight?\"", choices:[
-      {emoji:"❤️", label:"Plan a sweet date",        e:{dir:6,social:6,happy:8,money:-30}, tone:"pos"},
-      {emoji:"🛋️", label:"Suggest a cozy night in",  e:{dir:4,social:5,happy:6},           tone:"pos"},
-      {emoji:"😪", label:"\"Sorry, too tired.\"",     e:{dir:-4,social:-5,happy:-4},        tone:"neg"},
-    ]},
-  ],
-  "Dinner": [
-    {title:"Dinner choice", desc:"Stomach is grumbling again.", choices:[
-      {emoji:"🍳", label:"Cook a real meal at home",  e:{dir:4,health:6,happy:4,money:-10}, tone:"pos"},
-      {emoji:"🥡", label:"Order takeout",              e:{dir:0,happy:3,money:-25,health:-2},tone:"neu"},
-      {emoji:"🍷", label:"Eat at a fancy restaurant", e:{dir:2,social:4,happy:6,money:-60}, tone:"mix"},
-    ]},
-    {title:"Someone calls during dinner", desc:"Mom on the line.", choices:[
-      {emoji:"💕", label:"Pick up and chat for a while", e:{dir:5,social:6,happy:7},   tone:"pos"},
-      {emoji:"⏳", label:"Promise to call her back",     e:{dir:0,social:-1},          tone:"neu"},
-      {emoji:"🔇", label:"Decline the call",             e:{dir:-4,social:-5,happy:-3},tone:"neg"},
-    ]},
-  ],
-  "Night": [
-    {title:"Free time at last", desc:"How do you spend it?", choices:[
-      {emoji:"📖", label:"Read a book",                e:{dir:4,smarts:6,happy:4},  tone:"pos"},
-      {emoji:"📺", label:"Binge a TV series",          e:{dir:0,happy:5,health:-2}, tone:"neu"},
-      {emoji:"📱", label:"Doom-scroll on your phone",  e:{dir:-3,happy:-3,health:-2}, tone:"neg"},
-      {emoji:"🎨", label:"Work on a hobby project",    e:{dir:5,happy:7,smarts:4},  tone:"pos"},
-    ]},
-    {title:"Friends invite you out", desc:"Drinks at the bar tonight.", choices:[
-      {emoji:"🍹", label:"One drink, then home",  e:{dir:3,social:5,happy:5,money:-15},      tone:"pos"},
-      {emoji:"🎉", label:"Stay out till 2 AM",    e:{dir:-3,social:6,happy:6,money:-50,health:-6}, tone:"mix"},
-      {emoji:"🛌", label:"Stay home and rest",    e:{dir:2,health:4,social:-2},              tone:"neu"},
-    ]},
-  ],
-  "Bedtime": [
-    {title:"Time for bed", desc:"How do you wind down?", choices:[
-      {emoji:"🧘", label:"Stretch & meditate 5 mins",   e:{dir:5,health:6,happy:5},  tone:"pos"},
-      {emoji:"🪥", label:"Brush teeth & sleep",          e:{dir:3,health:3,happy:2},  tone:"pos"},
-      {emoji:"📱", label:"Stay on your phone in bed",   e:{dir:-3,health:-3,happy:-1},tone:"neg"},
-    ]},
-    {title:"Reflect on your day", desc:"One last thought before sleep.", choices:[
-      {emoji:"🙏", label:"List three things you're grateful for", e:{dir:5,happy:7},          tone:"pos"},
-      {emoji:"📓", label:"Plan tomorrow in your journal",         e:{dir:4,smarts:4,happy:3}, tone:"pos"},
-      {emoji:"😟", label:"Worry about everything",                 e:{dir:-4,health:-3,happy:-5},tone:"neg"},
-    ]},
-  ],
+const AGE_GROUPS = [
+  {id:"minor",  emoji:"🎒", label:"Under 18",   desc:"Student life"},
+  {id:"adult",  emoji:"💼", label:"18 to 60",   desc:"Working years"},
+  {id:"senior", emoji:"🌅", label:"Over 60",    desc:"Retired life"},
+];
+
+const OCCUPATIONS = [
+  {id:"job",        emoji:"🏢", label:"Job",        desc:"Employed at a company"},
+  {id:"business",   emoji:"📈", label:"Business",   desc:"Run your own"},
+  {id:"homemaker",  emoji:"🏡", label:"Homemaker",  desc:"Manage home & family"},
+  {id:"student",    emoji:"📚", label:"Student",    desc:"College / studying"},
+];
+
+// Resolves which lifestyle event pool to use based on age + occupation
+function lifestyleKey(){
+  if (S.ageGroup === "minor")  return "minor";
+  if (S.ageGroup === "senior") return "senior";
+  return S.occupation || "job"; // adult: pick by occupation, default to job
+}
+
+const LIFESTYLE_POOLS = {
+  "minor": {
+    "Morning": [
+        {title:'Your alarm rings', desc:"It's a school day. The bed is so warm.", cat:"self", choices:[
+          {emoji:"⏰", label:'Get up right away', e:{dir:3,health:4,happy:1}, tone:"pos"},
+          {emoji:"😴", label:'Snooze for 20 minutes', e:{dir:-2,health:-2,happy:2}, tone:"mix"},
+          {emoji:"🛌", label:'Pretend to be sick', e:{dir:-5,happy:3,smarts:-3}, tone:"neg"},
+        ]},
+        {title:'A parent calls you', desc:"They're calling for the third time.", cat:"family", choices:[
+          {emoji:"🙋", label:'"Coming!" and get up', e:{dir:3,social:3}, tone:"pos"},
+          {emoji:"📱", label:'Stay in bed scrolling', e:{dir:-2,happy:1,social:-2}, tone:"neg"},
+          {emoji:"😤", label:'"Five more minutes!"', e:{dir:-1,social:-1}, tone:"neu"},
+        ]},
+        {title:'Get ready for school', desc:'Uniform or outfit?', cat:"self", choices:[
+          {emoji:"✨", label:'Iron uniform, look sharp', e:{dir:3,happy:2,social:4}, tone:"pos"},
+          {emoji:"👕", label:"Wear yesterday's clothes", e:{dir:-1,social:-2}, tone:"neu"},
+          {emoji:"🪥", label:'Skip brushing teeth', e:{dir:-4,health:-3,social:-3}, tone:"neg"},
+        ]},
+    ],
+    "Breakfast": [
+        {title:'Breakfast on the table', desc:'Breakfast is on the table.', cat:"food", choices:[
+          {emoji:"🥣", label:'Eat the cereal & milk', e:{dir:3,health:4}, tone:"pos"},
+          {emoji:"🍳", label:'Ask for eggs and toast', e:{dir:2,health:3,social:2}, tone:"pos"},
+          {emoji:"🚫", label:'Skip and rush to school', e:{dir:-4,health:-4,smarts:-2}, tone:"neg"},
+        ]},
+        {title:'A parent asks about your day', desc:'They look up from the newspaper.', cat:"family", choices:[
+          {emoji:"☕", label:'Tell them about the test today', e:{dir:4,happy:3,social:5}, tone:"pos"},
+          {emoji:"🤐", label:'Mumble "nothing" and eat', e:{dir:-1,social:-2}, tone:"neu"},
+          {emoji:"📱", label:'Show them a meme on your phone', e:{dir:2,happy:2,social:3}, tone:"neu"},
+        ]},
+        {title:'Younger sibling spilled milk', desc:'All over the table.', cat:"family", choices:[
+          {emoji:"🧽", label:'Help clean it up calmly', e:{dir:4,happy:2,social:5}, tone:"pos"},
+          {emoji:"😡", label:'Yell at them', e:{dir:-3,happy:-2,social:-4}, tone:"neg"},
+          {emoji:"🙄", label:'Walk away, not your problem', e:{dir:-1,social:-2}, tone:"neu"},
+        ]},
+    ],
+    "Mid-morning": [
+        {title:'Math class is boring', desc:"Teacher's voice is putting you to sleep.", cat:"study", choices:[
+          {emoji:"✏️", label:'Take notes anyway', e:{dir:3,smarts:5}, tone:"pos"},
+          {emoji:"💤", label:'Doodle in your notebook', e:{happy:2,smarts:-2}, tone:"neu"},
+          {emoji:"📱", label:'Sneak phone under desk', e:{dir:-4,happy:2,smarts:-3}, tone:"neg"},
+        ]},
+        {title:'Pop quiz!', desc:"You weren't expecting this.", cat:"study", choices:[
+          {emoji:"💪", label:'Do your best with what you know', e:{dir:4,money:20,smarts:6}, tone:"pos"},
+          {emoji:"👀", label:"Try to peek at neighbor's paper", e:{dir:-5,smarts:-3,social:-2}, tone:"neg"},
+          {emoji:"🤷", label:'Just guess everything', e:{dir:-2,smarts:-2}, tone:"neu"},
+        ]},
+        {title:'Group project assigned', desc:'You can pick your team.', cat:"social", choices:[
+          {emoji:"🤝", label:'Team up with your best friend', e:{dir:3,smarts:3,social:5}, tone:"pos"},
+          {emoji:"🧠", label:'Pair with the smart kid', e:{dir:4,happy:-1,smarts:7}, tone:"pos"},
+          {emoji:"😶", label:'Get stuck with random kids', e:{social:2}, tone:"neu"},
+        ]},
+    ],
+    "Lunch": [
+        {title:'Cafeteria time', desc:'Lunch tray in hand. Where to sit?', cat:"social", choices:[
+          {emoji:"🍱", label:'Sit with your usual friends', e:{dir:4,happy:5,social:6}, tone:"pos"},
+          {emoji:"👋", label:'Invite the new kid to sit', e:{dir:5,happy:4,social:7}, tone:"pos"},
+          {emoji:"📚", label:'Eat alone in library', e:{dir:-1,smarts:4,social:-3}, tone:"neu"},
+        ]},
+        {title:'Lunch was packed for you', desc:"There's a little note inside.", cat:"family", choices:[
+          {emoji:"💕", label:'Read it & smile, eat happily', e:{dir:5,happy:8,social:3}, tone:"pos"},
+          {emoji:"😳", label:'Hide the note from friends', e:{happy:-1}, tone:"neu"},
+          {emoji:"🗑️", label:'Toss the lunch, buy chips', e:{dir:-4,money:-5,health:-5}, tone:"neg"},
+        ]},
+        {title:'Mean kids tease someone', desc:"It's making them cry.", cat:"social", choices:[
+          {emoji:"🛡️", label:'Stand up for them', e:{dir:7,happy:3,social:4}, tone:"pos"},
+          {emoji:"👥", label:'Quietly go sit with the kid', e:{dir:5,happy:2,social:5}, tone:"pos"},
+          {emoji:"👀", label:"Pretend you didn't see", e:{dir:-4,happy:-3}, tone:"neg"},
+        ]},
+    ],
+    "Afternoon": [
+        {title:'PE / sports class', desc:'Coach picks teams.', cat:"health", choices:[
+          {emoji:"🏃", label:'Give it your all', e:{dir:4,health:7,happy:4}, tone:"pos"},
+          {emoji:"⚽", label:'Play but take it easy', e:{dir:2,health:3,happy:2}, tone:"neu"},
+          {emoji:"🤕", label:'Fake an injury to skip', e:{dir:-4,health:-3,social:-3}, tone:"neg"},
+        ]},
+        {title:'Friend wants to skip class', desc:'"Last period, no one will notice."', cat:"social", choices:[
+          {emoji:"🚫", label:'"No, I\'m staying."', e:{dir:5,smarts:2}, tone:"pos"},
+          {emoji:"🚪", label:'Skip with them, hang at the park', e:{dir:-5,happy:4,smarts:-3,social:3}, tone:"neg"},
+          {emoji:"🤔", label:'Convince them to stay', e:{dir:4,smarts:2,social:4}, tone:"pos"},
+        ]},
+        {title:'Crush walks past', desc:'They smile at you.', cat:"social", choices:[
+          {emoji:"😊", label:'Smile back, say hi', e:{dir:5,happy:8,social:4}, tone:"pos"},
+          {emoji:"😳", label:'Freeze and look away', e:{dir:-1,happy:-2}, tone:"neg"},
+          {emoji:"🤪", label:'Wave too enthusiastically', e:{dir:1,happy:3,social:-1}, tone:"mix"},
+        ]},
+    ],
+    "Late afternoon": [
+        {title:'School ends', desc:"What's your plan?", cat:"self", choices:[
+          {emoji:"📚", label:'Head home and study', e:{dir:4,smarts:6}, tone:"pos"},
+          {emoji:"🏀", label:'Play sports with friends', e:{dir:4,health:5,happy:4,social:5}, tone:"pos"},
+          {emoji:"🎮", label:'Gaming all afternoon', e:{dir:-1,health:-2,happy:4,smarts:-2}, tone:"mix"},
+        ]},
+        {title:'Tuition class', desc:'An hour with your tutor.', cat:"study", choices:[
+          {emoji:"📖", label:'Pay attention, ask questions', e:{dir:5,smarts:7}, tone:"pos"},
+          {emoji:"😐", label:'Just go through the motions', e:{smarts:2}, tone:"neu"},
+          {emoji:"🙅", label:'Skip and tell your parents you went', e:{dir:-6,smarts:-4,social:-3}, tone:"neg"},
+        ]},
+        {title:'Pocket money decision', desc:'Grandma gave you ₹500.', cat:"finance", choices:[
+          {emoji:"🐷", label:'Save it in your piggy bank', e:{dir:4,money:50,smarts:2}, tone:"pos"},
+          {emoji:"🎮", label:'Buy a video game', e:{money:-40,happy:8}, tone:"neu"},
+          {emoji:"🍫", label:'Spend it on candy & snacks', e:{dir:-3,money:-50,health:-5,happy:5}, tone:"neg"},
+        ]},
+    ],
+    "Evening": [
+        {title:'Homework time', desc:'Big stack of assignments.', cat:"study", choices:[
+          {emoji:"✏️", label:'Tackle the hardest first', e:{dir:5,happy:-1,smarts:7}, tone:"pos"},
+          {emoji:"⚖️", label:'Pace yourself, take breaks', e:{dir:4,happy:2,smarts:5}, tone:"pos"},
+          {emoji:"📺", label:'Postpone, watch TV instead', e:{dir:-4,happy:3,smarts:-3}, tone:"neg"},
+        ]},
+        {title:'A parent asks for help', desc:'Setting the table for dinner.', cat:"family", choices:[
+          {emoji:"🍽️", label:'Help right away', e:{dir:4,happy:3,social:5}, tone:"pos"},
+          {emoji:"⏳", label:'"In a minute!"', e:{dir:-1,social:-1}, tone:"neu"},
+          {emoji:"😤", label:"Pretend you didn't hear", e:{dir:-4,happy:-2,social:-4}, tone:"neg"},
+        ]},
+        {title:'Best friend video calls', desc:'Drama at school today.', cat:"social", choices:[
+          {emoji:"👂", label:'Listen and support them', e:{dir:5,happy:4,social:7}, tone:"pos"},
+          {emoji:"💡", label:'Give them solid advice', e:{dir:4,smarts:3,social:5}, tone:"pos"},
+          {emoji:"🤐", label:"Cut it short, you're busy", e:{dir:-2,social:-3}, tone:"neu"},
+        ]},
+    ],
+    "Dinner": [
+        {title:'Family dinner', desc:"Everyone's at the table.", cat:"family", choices:[
+          {emoji:"🗣️", label:'Share your day animatedly', e:{dir:5,happy:6,social:7}, tone:"pos"},
+          {emoji:"🍛", label:'Eat quietly, listen to others', e:{dir:2,social:2}, tone:"neu"},
+          {emoji:"📱", label:'Stare at phone the whole time', e:{dir:-4,social:-5}, tone:"neg"},
+        ]},
+        {title:'A parent asks about grades', desc:'Direct and serious.', cat:"family", choices:[
+          {emoji:"💯", label:'Be honest, share your scores', e:{dir:4,smarts:2,social:4}, tone:"pos"},
+          {emoji:"🤥", label:'Lie about the bad ones', e:{dir:-5,happy:-3,social:-4}, tone:"neg"},
+          {emoji:"😶", label:'Avoid the topic', e:{dir:-2,social:-2}, tone:"neu"},
+        ]},
+        {title:'Your favorite meal is on the table', desc:'Just because.', cat:"family", choices:[
+          {emoji:"💕", label:'Hug them, say thanks', e:{dir:5,happy:7,social:8}, tone:"pos"},
+          {emoji:"😋", label:'Eat enthusiastically', e:{dir:4,happy:5,social:4}, tone:"pos"},
+          {emoji:"🤷", label:'"Cool, thanks." and eat', e:{dir:1,social:1}, tone:"neu"},
+        ]},
+    ],
+    "Night": [
+        {title:'Free time', desc:"What's the move?", cat:"leisure", choices:[
+          {emoji:"📖", label:'Read a book for fun', e:{dir:4,happy:4,smarts:6}, tone:"pos"},
+          {emoji:"🎮", label:'Play games with online friends', e:{dir:2,health:-1,happy:6,social:4}, tone:"mix"},
+          {emoji:"📱", label:'Scroll Instagram & TikTok', e:{dir:-3,health:-2,happy:-2}, tone:"neg"},
+          {emoji:"🎨", label:'Work on a hobby', e:{dir:5,happy:7,smarts:4}, tone:"pos"},
+        ]},
+        {title:'Friend wants to sneak out', desc:'"Just to the corner shop."', cat:"social", choices:[
+          {emoji:"🚫", label:'"No way, I\'d get grounded."', e:{dir:5,smarts:2}, tone:"pos"},
+          {emoji:"📞", label:'Talk on the phone instead', e:{dir:3,social:4}, tone:"pos"},
+          {emoji:"🌙", label:'Sneak out for an hour', e:{dir:-7,happy:4,social:3}, tone:"neg"},
+        ]},
+        {title:"Tomorrow's exam looms", desc:"You haven't fully prepared.", cat:"study", choices:[
+          {emoji:"📚", label:'Pull out books, cram smartly', e:{dir:4,money:30,health:-2,smarts:8}, tone:"pos"},
+          {emoji:"🥱", label:'Skim a few pages and rest', e:{dir:1,smarts:3}, tone:"neu"},
+          {emoji:"🛌", label:'Forget it, sleep early', e:{dir:-3,money:-15,smarts:-4}, tone:"neg"},
+        ]},
+    ],
+    "Bedtime": [
+        {title:'Time for bed', desc:'How do you wind down?', cat:"self", choices:[
+          {emoji:"🪥", label:'Brush teeth, wash face', e:{dir:3,health:4,happy:2}, tone:"pos"},
+          {emoji:"📖", label:'Read 10 mins under blanket', e:{dir:4,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"📱", label:'Stay on phone in bed', e:{dir:-3,health:-3,happy:-1}, tone:"neg"},
+        ]},
+        {title:'A parent tucks you in', desc:'They kiss your forehead.', cat:"family", choices:[
+          {emoji:"💕", label:'Hug them, share a thought', e:{dir:5,happy:8,social:6}, tone:"pos"},
+          {emoji:"😴", label:'Smile sleepily, drift off', e:{dir:4,happy:5}, tone:"pos"},
+          {emoji:"🙄", label:'Roll your eyes, "I\'m too old"', e:{dir:-2,happy:-1,social:-3}, tone:"neg"},
+        ]},
+        {title:'Reflect on your day', desc:'One last thought.', cat:"self", choices:[
+          {emoji:"🙏", label:"Three things you're grateful for", e:{dir:5,happy:7}, tone:"pos"},
+          {emoji:"📓", label:'Write in your diary', e:{dir:4,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"😟", label:"Worry about tomorrow's exam", e:{dir:-3,health:-3,happy:-4}, tone:"neg"},
+        ]},
+    ],
+  },
+  "job": {
+    "Morning": [
+        {title:'Your alarm rings', desc:"It's 7:00 AM. The bed is so warm.", cat:"self", choices:[
+          {emoji:"⏰", label:'Get up right away', e:{dir:3,health:4,happy:1}, tone:"pos"},
+          {emoji:"😴", label:'Snooze for 20 minutes', e:{dir:-2,health:-2,happy:2}, tone:"mix"},
+          {emoji:"🛌", label:'Call in sick, sleep in', e:{dir:-5,money:-50,happy:3}, tone:"neg"},
+        ]},
+        {title:'Out of bed', desc:'Time to face the day.', cat:"self", choices:[
+          {emoji:"🚿", label:'Hot shower & brush teeth', e:{dir:3,health:4,happy:3}, tone:"pos"},
+          {emoji:"💦", label:'Just splash water on face', e:{health:-1}, tone:"neu"},
+          {emoji:"🤢", label:'Skip washing up entirely', e:{dir:-4,health:-3,social:-3}, tone:"neg"},
+        ]},
+        {title:"Pick today's outfit", desc:"What's the vibe?", cat:"self", choices:[
+          {emoji:"👔", label:'Sharp & put-together', e:{dir:3,happy:3,social:4}, tone:"pos"},
+          {emoji:"👕", label:'Comfy casual', e:{dir:1,happy:2}, tone:"neu"},
+          {emoji:"🩳", label:"Whatever's on the floor", e:{dir:-2,happy:1,social:-3}, tone:"neg"},
+        ]},
+    ],
+    "Breakfast": [
+        {title:'Breakfast time', desc:'You hear your stomach growl.', cat:"food", choices:[
+          {emoji:"🥗", label:'Healthy bowl & fresh juice', e:{dir:4,money:-8,health:6}, tone:"pos"},
+          {emoji:"🥐", label:'Quick toast & coffee', e:{dir:1,money:-3,health:1}, tone:"neu"},
+          {emoji:"🍩", label:'Donuts and energy drink', e:{dir:-3,money:-5,health:-5,happy:3}, tone:"neg"},
+          {emoji:"🚫", label:'Skip breakfast entirely', e:{dir:-4,health:-4,happy:-3}, tone:"neg"},
+        ]},
+        {title:'Family is at the table', desc:'They want to chat.', cat:"family", choices:[
+          {emoji:"☕", label:'Sit down and talk warmly', e:{dir:4,happy:4,social:6}, tone:"pos"},
+          {emoji:"📱", label:'Scroll your phone instead', e:{dir:-2,happy:1,social:-4}, tone:"neg"},
+          {emoji:"🚪", label:'Eat fast and rush out', e:{dir:-1,social:-2}, tone:"neu"},
+        ]},
+        {title:'Coffee shop on the way', desc:'Line is short today.', cat:"food", choices:[
+          {emoji:"☕", label:'Order your usual', e:{dir:2,money:-5,happy:3}, tone:"pos"},
+          {emoji:"🌱", label:'Try a healthy smoothie', e:{dir:3,money:-8,health:4}, tone:"pos"},
+          {emoji:"🚶", label:'Skip it, save the money', e:{dir:2,money:5}, tone:"neu"},
+        ]},
+    ],
+    "Mid-morning": [
+        {title:'You arrive at work', desc:'A coworker waves hello.', cat:"social", choices:[
+          {emoji:"😊", label:'Greet everyone warmly', e:{dir:3,happy:3,social:5}, tone:"pos"},
+          {emoji:"🎧", label:'Headphones on, focus mode', e:{dir:2,smarts:4,social:-2}, tone:"neu"},
+          {emoji:"😒", label:'Walk past, ignore them', e:{dir:-3,social:-5}, tone:"neg"},
+        ]},
+        {title:'A tough task lands on you', desc:'Tight deadline. Big stakes.', cat:"work", choices:[
+          {emoji:"💪", label:'Tackle it head-on', e:{dir:5,money:30,happy:-2,smarts:5}, tone:"pos"},
+          {emoji:"🤝", label:'Ask a teammate for help', e:{dir:4,money:15,smarts:3,social:5}, tone:"pos"},
+          {emoji:"🤷", label:'Push it to tomorrow', e:{dir:-5,money:-20,smarts:-2}, tone:"neg"},
+        ]},
+        {title:'Boss sends a message', desc:'They want a quick call.', cat:"work", choices:[
+          {emoji:"📞", label:'Call right back', e:{dir:3,money:20,happy:-1}, tone:"pos"},
+          {emoji:"📝", label:'Reply with thoughtful notes', e:{dir:4,money:15,smarts:4}, tone:"pos"},
+          {emoji:"😶", label:"Pretend you didn't see it", e:{dir:-6,money:-30,social:-3}, tone:"neg"},
+        ]},
+        {title:'Office is quiet today', desc:'Half the team is out.', cat:"work", choices:[
+          {emoji:"🚀", label:'Power through your backlog', e:{dir:5,money:25,smarts:6}, tone:"pos"},
+          {emoji:"☕", label:'Take a long coffee break', e:{money:-3,happy:2}, tone:"neu"},
+          {emoji:"📺", label:'Watch YouTube at your desk', e:{dir:-3,money:-10,smarts:-2}, tone:"neg"},
+        ]},
+    ],
+    "Lunch": [
+        {title:'Lunch break', desc:'Where to eat?', cat:"food", choices:[
+          {emoji:"🥙", label:'Healthy meal-prep from home', e:{dir:4,money:8,health:5}, tone:"pos"},
+          {emoji:"🍕", label:'Pizza with coworkers', e:{dir:2,money:-15,health:-3,happy:4,social:5}, tone:"mix"},
+          {emoji:"🍔", label:'Solo fast food binge', e:{dir:-3,money:-12,health:-6,happy:2}, tone:"neg"},
+        ]},
+        {title:'Old friend texts', desc:'"Free for lunch?"', cat:"social", choices:[
+          {emoji:"🍜", label:'Meet up and catch up', e:{dir:5,money:-18,happy:6,social:8}, tone:"pos"},
+          {emoji:"📅", label:'Reschedule for later', e:{dir:1,social:1}, tone:"neu"},
+          {emoji:"❌", label:'Leave them on read', e:{dir:-4,happy:-3,social:-6}, tone:"neg"},
+        ]},
+        {title:'Office potluck day', desc:'Everyone brought something.', cat:"social", choices:[
+          {emoji:"🍱", label:'Share what you brought', e:{dir:4,happy:4,social:6}, tone:"pos"},
+          {emoji:"🥤", label:'Just grab a drink, work through', e:{dir:-1,smarts:2,social:-2}, tone:"neu"},
+          {emoji:"🍰", label:'Pile your plate, eat too much', e:{health:-3,happy:4}, tone:"mix"},
+        ]},
+    ],
+    "Afternoon": [
+        {title:'Energy slump hits', desc:'Eyes feel heavy.', cat:"health", choices:[
+          {emoji:"🚶", label:'Take a 10-min walk outside', e:{dir:4,health:5,happy:5}, tone:"pos"},
+          {emoji:"☕", label:'Grab another coffee', e:{dir:1,money:-5,health:-2,happy:2}, tone:"neu"},
+          {emoji:"🍫", label:'Eat sugar and push through', e:{dir:-2,health:-4,happy:2}, tone:"neg"},
+        ]},
+        {title:'Coworker is gossiping', desc:'They want you to join in.', cat:"social", choices:[
+          {emoji:"🙅", label:'Politely change the topic', e:{dir:5,happy:2,social:3}, tone:"pos"},
+          {emoji:"👂", label:'Listen but stay quiet', e:{dir:-1}, tone:"neu"},
+          {emoji:"🗣️", label:'Add fuel to the gossip', e:{dir:-5,happy:-2,social:-4}, tone:"neg"},
+        ]},
+        {title:'Random meeting invitation', desc:"Could've been an email.", cat:"work", choices:[
+          {emoji:"✅", label:'Attend, listen, contribute', e:{dir:2,smarts:2,social:2}, tone:"pos"},
+          {emoji:"👻", label:'Mute camera, do other work', e:{smarts:3,social:-1}, tone:"neu"},
+          {emoji:"🚫", label:'Decline politely', e:{dir:3,money:10,smarts:4}, tone:"pos"},
+        ]},
+    ],
+    "Late afternoon": [
+        {title:'Big decision at work', desc:'Long-term project planning.', cat:"work", choices:[
+          {emoji:"📊", label:'Prepare a careful proposal', e:{dir:5,money:40,happy:-2,smarts:6}, tone:"pos"},
+          {emoji:"💡", label:'Pitch a bold creative idea', e:{dir:4,money:25,smarts:4,social:4}, tone:"pos"},
+          {emoji:"🚪", label:'Stay quiet, leave at five', e:{dir:-3,money:-10,smarts:-2}, tone:"neg"},
+        ]},
+        {title:'You finish early', desc:'Bonus time. What now?', cat:"self", choices:[
+          {emoji:"📚", label:'Take an online course', e:{dir:4,money:-10,smarts:7}, tone:"pos"},
+          {emoji:"🏃", label:'Go to the gym', e:{dir:5,health:8,happy:4}, tone:"pos"},
+          {emoji:"🎮", label:'Play games at home', e:{health:-2,happy:5}, tone:"neu"},
+        ]},
+        {title:'Project launch day', desc:'Months of work going live.', cat:"work", choices:[
+          {emoji:"🚀", label:'Stay late, see it through', e:{dir:6,money:50,health:-2,smarts:5}, tone:"pos"},
+          {emoji:"👍", label:'Hand it off & log out', e:{dir:1,money:10}, tone:"neu"},
+          {emoji:"😬", label:'Quietly clock out early', e:{dir:-4,money:-20,social:-3}, tone:"neg"},
+        ]},
+    ],
+    "Evening": [
+        {title:'Heading home', desc:'How do you wind down?', cat:"self", choices:[
+          {emoji:"🌳", label:'Walk through the park', e:{dir:4,health:4,happy:5}, tone:"pos"},
+          {emoji:"🚇", label:'Listen to a podcast on transit', e:{dir:3,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"🚗", label:'Sit in traffic, fume', e:{dir:-2,happy:-4}, tone:"neg"},
+        ]},
+        {title:'Partner texts you', desc:'"Want to do something tonight?"', cat:"social", choices:[
+          {emoji:"❤️", label:'Plan a sweet date', e:{dir:6,money:-30,happy:8,social:6}, tone:"pos"},
+          {emoji:"🛋️", label:'Suggest a cozy night in', e:{dir:4,happy:6,social:5}, tone:"pos"},
+          {emoji:"😪", label:'"Sorry, too tired."', e:{dir:-4,happy:-4,social:-5}, tone:"neg"},
+        ]},
+        {title:'Stop by grocery store', desc:'Fridge is empty.', cat:"home", choices:[
+          {emoji:"🛒", label:'Buy fresh ingredients', e:{dir:4,money:-25,health:4}, tone:"pos"},
+          {emoji:"🥡", label:'Grab ready meals', e:{money:-20,health:-2}, tone:"neu"},
+          {emoji:"🍕", label:'Skip it, order delivery later', e:{dir:-2,money:-30,health:-3}, tone:"neg"},
+        ]},
+    ],
+    "Dinner": [
+        {title:'Dinner choice', desc:'Stomach is grumbling again.', cat:"food", choices:[
+          {emoji:"🍳", label:'Cook a real meal at home', e:{dir:4,money:-10,health:6,happy:4}, tone:"pos"},
+          {emoji:"🥡", label:'Order takeout', e:{money:-25,health:-2,happy:3}, tone:"neu"},
+          {emoji:"🍷", label:'Eat at a fancy restaurant', e:{dir:2,money:-60,happy:6,social:4}, tone:"mix"},
+        ]},
+        {title:'A parent calls during dinner', desc:'Just to check in.', cat:"family", choices:[
+          {emoji:"💕", label:'Pick up and chat for a while', e:{dir:5,happy:7,social:6}, tone:"pos"},
+          {emoji:"⏳", label:'Promise to call her back', e:{social:-1}, tone:"neu"},
+          {emoji:"🔇", label:'Decline the call', e:{dir:-4,happy:-3,social:-5}, tone:"neg"},
+        ]},
+        {title:'Bills arrived in the mail', desc:'Phone, electric, internet.', cat:"finance", choices:[
+          {emoji:"💳", label:'Pay them all right now', e:{dir:4,money:-80,smarts:3}, tone:"pos"},
+          {emoji:"📅", label:'Schedule for due dates', e:{dir:3,smarts:4}, tone:"pos"},
+          {emoji:"🙈", label:'Stuff them in a drawer', e:{dir:-5,money:-30,happy:-3}, tone:"neg"},
+        ]},
+    ],
+    "Night": [
+        {title:'Free time at last', desc:'How do you spend it?', cat:"leisure", choices:[
+          {emoji:"📖", label:'Read a book', e:{dir:4,happy:4,smarts:6}, tone:"pos"},
+          {emoji:"📺", label:'Binge a TV series', e:{health:-2,happy:5}, tone:"neu"},
+          {emoji:"📱", label:'Doom-scroll on your phone', e:{dir:-3,health:-2,happy:-3}, tone:"neg"},
+          {emoji:"🎨", label:'Work on a hobby project', e:{dir:5,happy:7,smarts:4}, tone:"pos"},
+        ]},
+        {title:'Friends invite you out', desc:'Drinks at the bar tonight.', cat:"social", choices:[
+          {emoji:"🍹", label:'One drink, then home', e:{dir:3,money:-15,happy:5,social:5}, tone:"pos"},
+          {emoji:"🎉", label:'Stay out till 2 AM', e:{dir:-3,money:-50,health:-6,happy:6,social:6}, tone:"mix"},
+          {emoji:"🛌", label:'Stay home and rest', e:{dir:2,health:4,social:-2}, tone:"neu"},
+        ]},
+        {title:'Online learning course', desc:'You started one last week.', cat:"learn", choices:[
+          {emoji:"📚", label:"Watch tonight's lesson", e:{dir:5,money:-5,smarts:8}, tone:"pos"},
+          {emoji:"⏭️", label:'Skip just tonight', e:{dir:-1,smarts:-1}, tone:"neu"},
+          {emoji:"❌", label:'Quit the course entirely', e:{dir:-4,happy:-2,smarts:-5}, tone:"neg"},
+        ]},
+    ],
+    "Bedtime": [
+        {title:'Time for bed', desc:'How do you wind down?', cat:"self", choices:[
+          {emoji:"🧘", label:'Stretch & meditate 5 mins', e:{dir:5,health:6,happy:5}, tone:"pos"},
+          {emoji:"🪥", label:'Brush teeth & sleep', e:{dir:3,health:3,happy:2}, tone:"pos"},
+          {emoji:"📱", label:'Stay on your phone in bed', e:{dir:-3,health:-3,happy:-1}, tone:"neg"},
+        ]},
+        {title:'Reflect on your day', desc:'One last thought before sleep.', cat:"self", choices:[
+          {emoji:"🙏", label:"List three things you're grateful for", e:{dir:5,happy:7}, tone:"pos"},
+          {emoji:"📓", label:'Plan tomorrow in your journal', e:{dir:4,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"😟", label:'Worry about everything', e:{dir:-4,health:-3,happy:-5}, tone:"neg"},
+        ]},
+        {title:"Tomorrow's big meeting", desc:'Are you ready?', cat:"work", choices:[
+          {emoji:"📋", label:'Quickly review your notes', e:{dir:4,money:20,smarts:5}, tone:"pos"},
+          {emoji:"😌", label:"You're prepared, sleep well", e:{dir:3,happy:4}, tone:"pos"},
+          {emoji:"😬", label:'Lie awake stressing', e:{dir:-3,health:-4,happy:-3}, tone:"neg"},
+        ]},
+    ],
+  },
+  "business": {
+    "Morning": [
+        {title:'Your alarm rings', desc:'Day starts when YOU say.', cat:"self", choices:[
+          {emoji:"⏰", label:'Up at 6, hit the ground running', e:{dir:4,money:20,health:4,smarts:3}, tone:"pos"},
+          {emoji:"☕", label:'Slow start with coffee & news', e:{dir:2,happy:3,smarts:2}, tone:"neu"},
+          {emoji:"🛌", label:'Sleep in, you earned it', e:{dir:-3,money:-30}, tone:"neg"},
+        ]},
+        {title:'Email inbox flood', desc:'47 unread.', cat:"work", choices:[
+          {emoji:"📧", label:'Triage urgent ones first', e:{dir:4,money:25,smarts:4}, tone:"pos"},
+          {emoji:"⚡", label:'Reply to all rapidly', e:{dir:2,money:10,happy:-2,smarts:2}, tone:"mix"},
+          {emoji:"🙈", label:'Close laptop, deal later', e:{dir:-4,money:-40}, tone:"neg"},
+        ]},
+        {title:'Morning workout?', desc:'You promised yourself.', cat:"health", choices:[
+          {emoji:"💪", label:'30 mins, full session', e:{dir:5,health:8,happy:4}, tone:"pos"},
+          {emoji:"🚶", label:'Quick walk around block', e:{dir:2,health:3,happy:2}, tone:"neu"},
+          {emoji:"⏭️", label:'Skip, work calls', e:{dir:-2,money:10,health:-3}, tone:"neg"},
+        ]},
+    ],
+    "Breakfast": [
+        {title:'Breakfast meeting', desc:'Investor wants to chat.', cat:"work", choices:[
+          {emoji:"☕", label:'Pitch over coffee, sharp', e:{dir:5,money:80,smarts:5,social:4}, tone:"pos"},
+          {emoji:"📊", label:'Bring data, walk through it', e:{dir:4,money:50,smarts:6}, tone:"pos"},
+          {emoji:"🤐", label:"Reschedule, you're not ready", e:{dir:-3,money:-30}, tone:"neg"},
+        ]},
+        {title:'Quick breakfast at home', desc:'Family eating too.', cat:"family", choices:[
+          {emoji:"👨‍👩‍👧", label:'Eat together, leave phone away', e:{dir:5,happy:6,social:7}, tone:"pos"},
+          {emoji:"📱", label:'Eat & answer Slack messages', e:{dir:-1,money:15,social:-3}, tone:"neu"},
+          {emoji:"🚀", label:'Skip, head to office early', e:{dir:-3,money:20,social:-4}, tone:"neg"},
+        ]},
+        {title:'Cash flow check', desc:'Open the books.', cat:"finance", choices:[
+          {emoji:"📈", label:'Review carefully, plan ahead', e:{dir:5,money:30,smarts:6}, tone:"pos"},
+          {emoji:"👀", label:'Quick glance, looks fine', e:{dir:1,smarts:1}, tone:"neu"},
+          {emoji:"🙉", label:'Avoid looking, scary', e:{dir:-5,money:-50,happy:-4}, tone:"neg"},
+        ]},
+    ],
+    "Mid-morning": [
+        {title:'Team standup', desc:"Everyone's waiting on you.", cat:"work", choices:[
+          {emoji:"🎯", label:'Set a clear focus for the day', e:{dir:5,money:30,smarts:5,social:5}, tone:"pos"},
+          {emoji:"🤝", label:'Listen to blockers, unblock', e:{dir:5,money:25,social:6}, tone:"pos"},
+          {emoji:"⏰", label:'Run late, rush through it', e:{dir:-3,money:-15,social:-3}, tone:"neg"},
+        ]},
+        {title:'Big client unhappy', desc:"They're emailing complaints.", cat:"work", choices:[
+          {emoji:"📞", label:'Call them right away', e:{dir:5,money:60,happy:-3,smarts:4}, tone:"pos"},
+          {emoji:"📝", label:'Send detailed apology email', e:{dir:3,money:20,smarts:4}, tone:"pos"},
+          {emoji:"🤞", label:'Hope it blows over', e:{dir:-7,money:-100}, tone:"neg"},
+        ]},
+        {title:'Hiring decision', desc:'Two candidates, must pick one.', cat:"work", choices:[
+          {emoji:"⭐", label:'Pick the experienced one', e:{dir:4,money:-50,smarts:4,social:2}, tone:"pos"},
+          {emoji:"🌱", label:'Bet on the hungry junior', e:{dir:4,money:-20,smarts:3,social:4}, tone:"mix"},
+          {emoji:"⏸️", label:'Delay, keep interviewing', e:{dir:-2,money:-30}, tone:"neg"},
+        ]},
+    ],
+    "Lunch": [
+        {title:'Networking lunch', desc:'Industry contacts in town.', cat:"social", choices:[
+          {emoji:"🤝", label:'Go, build relationships', e:{dir:5,money:40,happy:3,social:8}, tone:"pos"},
+          {emoji:"🥗", label:'Quick lunch alone, save time', e:{dir:1,money:10,smarts:2}, tone:"neu"},
+          {emoji:"🍔", label:'Drive-thru at desk', e:{dir:-2,money:10,health:-4}, tone:"neg"},
+        ]},
+        {title:'Co-founder wants to chat', desc:'About direction.', cat:"work", choices:[
+          {emoji:"🗣️", label:'Long honest conversation', e:{dir:5,smarts:4,social:6}, tone:"pos"},
+          {emoji:"✅", label:'Quick alignment, get back to work', e:{dir:3,money:15,social:3}, tone:"pos"},
+          {emoji:"🙅", label:'"Not now, busy."', e:{dir:-5,money:-30,social:-6}, tone:"neg"},
+        ]},
+        {title:'Marketing agency pitch', desc:'They want your business.', cat:"work", choices:[
+          {emoji:"👂", label:'Hear them out fully', e:{dir:3,money:-100,smarts:4,social:2}, tone:"neu"},
+          {emoji:"📊", label:'Ask hard questions', e:{dir:5,money:-50,smarts:6}, tone:"pos"},
+          {emoji:"🚪", label:'Politely decline', e:{dir:2,money:15}, tone:"neu"},
+        ]},
+    ],
+    "Afternoon": [
+        {title:'Energy crash', desc:'Brain feels foggy.', cat:"health", choices:[
+          {emoji:"🚶", label:'Walk outside 15 mins', e:{dir:4,health:5,happy:4}, tone:"pos"},
+          {emoji:"☕", label:'Third coffee of the day', e:{money:-5,health:-3,happy:2}, tone:"neu"},
+          {emoji:"💤", label:'Quick power nap', e:{dir:4,health:4,happy:3}, tone:"pos"},
+        ]},
+        {title:'Strategic decision', desc:'Should you raise prices?', cat:"finance", choices:[
+          {emoji:"📈", label:'Yes, raise 15%, customers value you', e:{dir:5,money:120,smarts:6}, tone:"pos"},
+          {emoji:"📊", label:'Test with new clients only', e:{dir:4,money:50,smarts:5}, tone:"pos"},
+          {emoji:"😬", label:'Too risky, keep them', e:{dir:-1,money:-20}, tone:"neg"},
+        ]},
+        {title:'Office furniture broken', desc:'Chair just collapsed.', cat:"home", choices:[
+          {emoji:"🛒", label:'Order replacement online', e:{dir:2,money:-40,happy:2}, tone:"neu"},
+          {emoji:"🔧", label:'Try to fix it yourself', e:{dir:1,money:10,happy:-1,smarts:2}, tone:"mix"},
+          {emoji:"🤷", label:'Use a folding chair, save money', e:{dir:-2,money:20,health:-3}, tone:"neg"},
+        ]},
+    ],
+    "Late afternoon": [
+        {title:'Investor pitch deck due', desc:'Big meeting tomorrow.', cat:"work", choices:[
+          {emoji:"✨", label:'Polish until perfect', e:{dir:5,money:80,health:-3,smarts:7}, tone:"pos"},
+          {emoji:"⚖️", label:'Good enough, get rest', e:{dir:3,money:30,smarts:3}, tone:"pos"},
+          {emoji:"🤞", label:'Wing it tomorrow', e:{dir:-5,money:-100,smarts:-3}, tone:"neg"},
+        ]},
+        {title:'Vendor wants payment', desc:"It's a week late.", cat:"finance", choices:[
+          {emoji:"💳", label:'Pay in full immediately', e:{dir:4,money:-60,social:4}, tone:"pos"},
+          {emoji:"📞", label:'Call, negotiate terms', e:{dir:4,money:-30,smarts:5}, tone:"pos"},
+          {emoji:"👻", label:'Ignore the email', e:{dir:-6,money:-20,social:-5}, tone:"neg"},
+        ]},
+        {title:'Press wants an interview', desc:'Your industry, big publication.', cat:"work", choices:[
+          {emoji:"📰", label:'Yes, prep talking points', e:{dir:5,money:60,smarts:4,social:5}, tone:"pos"},
+          {emoji:"📝", label:'Yes, but ask for written Q&A', e:{dir:4,money:30,smarts:4}, tone:"pos"},
+          {emoji:"🚫", label:'Decline, not your style', e:{dir:-1,money:-20}, tone:"neu"},
+        ]},
+    ],
+    "Evening": [
+        {title:'Heading home', desc:'Mentally exhausted.', cat:"self", choices:[
+          {emoji:"🌳", label:'Walk, decompress', e:{dir:4,health:4,happy:5}, tone:"pos"},
+          {emoji:"🎧", label:'Audiobook in the car', e:{dir:3,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"📞", label:'More calls on the way', e:{dir:-2,money:20,happy:-3}, tone:"neg"},
+        ]},
+        {title:'Partner asks about your day', desc:"They notice you're stressed.", cat:"family", choices:[
+          {emoji:"💕", label:'Open up, talk it out', e:{dir:6,happy:8,social:8}, tone:"pos"},
+          {emoji:"😅", label:'"Just a long day."', e:{dir:1,social:2}, tone:"neu"},
+          {emoji:"😤", label:'"Don\'t ask, please."', e:{dir:-4,happy:-4,social:-5}, tone:"neg"},
+        ]},
+        {title:'Side project idea hits', desc:'Could be your next big thing.', cat:"self", choices:[
+          {emoji:"✏️", label:'Sketch it out tonight', e:{dir:5,happy:5,smarts:6}, tone:"pos"},
+          {emoji:"📓", label:'Note it, revisit later', e:{dir:3,smarts:3}, tone:"pos"},
+          {emoji:"🚫", label:"You don't have time", e:{dir:-1,happy:-2}, tone:"neg"},
+        ]},
+    ],
+    "Dinner": [
+        {title:'Dinner choice', desc:'Family is hungry.', cat:"food", choices:[
+          {emoji:"🍳", label:'Cook together at home', e:{dir:5,money:-15,health:4,happy:6,social:6}, tone:"pos"},
+          {emoji:"🥡", label:'Order favorites for everyone', e:{dir:2,money:-40,happy:4}, tone:"neu"},
+          {emoji:"🍷", label:'Treat family to a restaurant', e:{dir:4,money:-100,happy:8,social:6}, tone:"mix"},
+        ]},
+        {title:'Talk shop or talk life?', desc:'Partner is at the table.', cat:"family", choices:[
+          {emoji:"💕", label:'All life, leave work alone', e:{dir:6,happy:7,social:8}, tone:"pos"},
+          {emoji:"💼", label:'Share work wins, ask their take', e:{dir:4,smarts:3,social:5}, tone:"pos"},
+          {emoji:"📱", label:'Phone-checking through dinner', e:{dir:-5,happy:-4,social:-6}, tone:"neg"},
+        ]},
+        {title:'Quarterly numbers', desc:'Just got the report.', cat:"finance", choices:[
+          {emoji:"🥂", label:'Beat targets, celebrate', e:{dir:6,money:100,happy:8}, tone:"pos"},
+          {emoji:"📊", label:'Hit targets, steady growth', e:{dir:4,money:50}, tone:"pos"},
+          {emoji:"😟", label:'Below target, plan changes', e:{dir:-3,money:-50,smarts:4}, tone:"mix"},
+        ]},
+    ],
+    "Night": [
+        {title:'Free time at last', desc:'Or is it?', cat:"leisure", choices:[
+          {emoji:"📖", label:'Read a business book', e:{dir:4,happy:3,smarts:7}, tone:"pos"},
+          {emoji:"🎬", label:'Movie with family', e:{dir:5,happy:7,social:6}, tone:"pos"},
+          {emoji:"💻", label:'More work, just an hour', e:{dir:-2,money:30,health:-3,happy:-3}, tone:"neg"},
+          {emoji:"🎨", label:"Hobby that's just for you", e:{dir:5,happy:8,smarts:3}, tone:"pos"},
+        ]},
+        {title:'Industry event invite', desc:'9 PM, drinks downtown.', cat:"social", choices:[
+          {emoji:"🍸", label:'Quick stop, network 1 hr', e:{dir:4,money:40,health:-2,social:7}, tone:"pos"},
+          {emoji:"🎉", label:'Stay till closing', e:{dir:-2,money:-30,health:-6,social:8}, tone:"mix"},
+          {emoji:"🛌", label:'Skip, sleep matters more', e:{dir:3,health:4,social:-2}, tone:"pos"},
+        ]},
+        {title:'Investor sends late email', desc:'Decision needed by tomorrow.', cat:"work", choices:[
+          {emoji:"📝", label:'Reply now, set boundaries', e:{dir:4,money:80,smarts:5,social:2}, tone:"pos"},
+          {emoji:"⏰", label:'Wait till morning', e:{dir:2,money:20,happy:2}, tone:"neu"},
+          {emoji:"😱", label:'Reply panicked, sleep ruined', e:{dir:-4,health:-5,happy:-5}, tone:"neg"},
+        ]},
+    ],
+    "Bedtime": [
+        {title:"Brain won't switch off", desc:'Thinking about work.', cat:"self", choices:[
+          {emoji:"🧘", label:'10-min meditation', e:{dir:5,health:6,happy:5}, tone:"pos"},
+          {emoji:"📓", label:'Brain-dump worries to paper', e:{dir:4,happy:4,smarts:4}, tone:"pos"},
+          {emoji:"📱", label:'Read emails in bed', e:{dir:-4,health:-4,happy:-4}, tone:"neg"},
+        ]},
+        {title:"Tomorrow's calendar", desc:'8 meetings stacked.', cat:"work", choices:[
+          {emoji:"✂️", label:'Cut 2, focus matters', e:{dir:5,happy:4,smarts:5}, tone:"pos"},
+          {emoji:"☕", label:"Power through, you've got this", e:{dir:2,money:30,health:-3}, tone:"mix"},
+          {emoji:"😬", label:'Stress about it now', e:{dir:-3,health:-4,happy:-4}, tone:"neg"},
+        ]},
+        {title:'Reflect on the day', desc:'What went right & wrong?', cat:"self", choices:[
+          {emoji:"🙏", label:'Three wins, three lessons', e:{dir:5,happy:6,smarts:4}, tone:"pos"},
+          {emoji:"📈", label:"Plan tomorrow's top 3", e:{dir:4,money:20,smarts:5}, tone:"pos"},
+          {emoji:"😟", label:'Spiral about all the misses', e:{dir:-4,health:-3,happy:-5}, tone:"neg"},
+        ]},
+    ],
+  },
+  "homemaker": {
+    "Morning": [
+        {title:'Your alarm rings', desc:'Kids will be up soon.', cat:"self", choices:[
+          {emoji:"⏰", label:'Up first, beat the chaos', e:{dir:4,health:3,happy:4}, tone:"pos"},
+          {emoji:"😴", label:'10 more minutes', e:{dir:-1,health:-1,happy:2}, tone:"neu"},
+          {emoji:"📱", label:'Quiet phone time first', e:{dir:2,happy:4,social:-1}, tone:"neu"},
+        ]},
+        {title:'Kids need to wake up', desc:'School bus in 45 minutes.', cat:"family", choices:[
+          {emoji:"🤗", label:'Gentle wake-up routine', e:{dir:5,happy:4,social:6}, tone:"pos"},
+          {emoji:"📢", label:'"Up, up, UP!"', e:{dir:2,happy:2,social:3}, tone:"neu"},
+          {emoji:"⏳", label:'Let them wake themselves', e:{dir:-3,smarts:-2,social:-3}, tone:"neg"},
+        ]},
+        {title:'Kitchen looks rough', desc:"Last night's mess still here.", cat:"home", choices:[
+          {emoji:"🧽", label:'Quick clean before breakfast', e:{dir:4,health:3,happy:3,smarts:2}, tone:"pos"},
+          {emoji:"⏭️", label:'Deal with it after school run', e:{happy:1}, tone:"neu"},
+          {emoji:"🙄", label:"Pretend you don't see it", e:{dir:-2,happy:-3}, tone:"neg"},
+        ]},
+    ],
+    "Breakfast": [
+        {title:'Breakfast for everyone', desc:'Different demands.', cat:"food", choices:[
+          {emoji:"🥞", label:'Cook a real meal for the family', e:{dir:5,health:5,happy:5,social:7}, tone:"pos"},
+          {emoji:"🥣", label:'Cereal & fruit, easy', e:{dir:2,health:3,social:2}, tone:"neu"},
+          {emoji:"🍞", label:"Toast for everyone, that's it", e:{health:1}, tone:"neu"},
+        ]},
+        {title:'Picky eater drama', desc:"Kid won't eat eggs today.", cat:"family", choices:[
+          {emoji:"😌", label:'Stay patient, offer alternatives', e:{dir:5,happy:2,smarts:3,social:6}, tone:"pos"},
+          {emoji:"🤷", label:'Let them skip breakfast', e:{dir:-2,happy:-2,social:-3}, tone:"neg"},
+          {emoji:"😡", label:'Snap, force them to eat', e:{dir:-4,happy:-4,social:-5}, tone:"neg"},
+        ]},
+        {title:'Partner rushing out', desc:'Forgot their lunch.', cat:"family", choices:[
+          {emoji:"🥪", label:'Hand it to them at the door', e:{dir:5,happy:5,social:7}, tone:"pos"},
+          {emoji:"📞", label:'Call to remind them', e:{dir:3,social:4}, tone:"pos"},
+          {emoji:"🤷", label:"They'll figure it out", e:{dir:-1,social:-2}, tone:"neu"},
+        ]},
+    ],
+    "Mid-morning": [
+        {title:'School drop-off done', desc:'House is quiet.', cat:"self", choices:[
+          {emoji:"☕", label:'Coffee, finally relax 20 min', e:{dir:4,health:2,happy:6}, tone:"pos"},
+          {emoji:"🧹", label:'Start chores immediately', e:{dir:3,health:2,smarts:2}, tone:"pos"},
+          {emoji:"📱", label:'Catch up on social media', e:{dir:-2,health:-2,happy:2}, tone:"neg"},
+        ]},
+        {title:'Laundry pile is huge', desc:'Mountain of clothes.', cat:"home", choices:[
+          {emoji:"🧺", label:'Sort, wash, fold properly', e:{dir:4,happy:3,smarts:3}, tone:"pos"},
+          {emoji:"🌪️", label:'Throw it all in one load', e:{money:-5,happy:2}, tone:"neu"},
+          {emoji:"⏭️", label:"Tomorrow's problem", e:{dir:-3,happy:-3}, tone:"neg"},
+        ]},
+        {title:'Plumber arrives', desc:'Kitchen sink leaking.', cat:"home", choices:[
+          {emoji:"🔧", label:'Watch & learn for next time', e:{dir:4,money:-50,smarts:5}, tone:"pos"},
+          {emoji:"☕", label:'Make tea, supervise', e:{dir:2,money:-50,social:3}, tone:"neu"},
+          {emoji:"📱", label:'Leave them to it', e:{money:-60}, tone:"neu"},
+        ]},
+    ],
+    "Lunch": [
+        {title:'Lunch for one', desc:'Kids at school, partner at work.', cat:"food", choices:[
+          {emoji:"🥗", label:'Healthy salad, eat slowly', e:{dir:5,health:6,happy:4}, tone:"pos"},
+          {emoji:"🍝", label:'Leftovers from last night', e:{dir:2,money:8,health:2}, tone:"neu"},
+          {emoji:"🍫", label:'Snacks while standing', e:{dir:-3,health:-4,happy:2}, tone:"neg"},
+        ]},
+        {title:'Friend invites you for lunch', desc:"Friends group at café.", cat:"social", choices:[
+          {emoji:"☕", label:'Yes! You need this', e:{dir:5,money:-15,happy:7,social:8}, tone:"pos"},
+          {emoji:"🏠", label:'Decline, errands await', e:{dir:-1,happy:-2,social:-3}, tone:"neu"},
+          {emoji:"📞", label:'Postpone for next week', e:{dir:1,social:1}, tone:"neu"},
+        ]},
+        {title:'Online shopping temptation', desc:'App keeps notifying.', cat:"finance", choices:[
+          {emoji:"🚫", label:'Close the app', e:{dir:4,money:20,smarts:3}, tone:"pos"},
+          {emoji:"🛒", label:'One small thing', e:{money:-30,happy:3}, tone:"mix"},
+          {emoji:"💳", label:'Cart explodes', e:{dir:-5,money:-150,happy:4}, tone:"neg"},
+        ]},
+    ],
+    "Afternoon": [
+        {title:'Time for yourself', desc:'Rare quiet block.', cat:"self", choices:[
+          {emoji:"🧘", label:'Yoga or meditation', e:{dir:5,health:7,happy:6}, tone:"pos"},
+          {emoji:"📖", label:'Read your book', e:{dir:4,happy:5,smarts:5}, tone:"pos"},
+          {emoji:"📺", label:'Watch a show, no guilt', e:{dir:2,health:-1,happy:5}, tone:"neu"},
+        ]},
+        {title:'Grocery run needed', desc:'Fridge is bare.', cat:"home", choices:[
+          {emoji:"📋", label:'Make a list, stick to it', e:{dir:4,money:-60,health:3,smarts:4}, tone:"pos"},
+          {emoji:"🛒", label:'Just go, see what looks good', e:{dir:1,money:-90}, tone:"neu"},
+          {emoji:"🥡", label:'Skip, order in tonight', e:{dir:-3,money:-50,health:-3}, tone:"neg"},
+        ]},
+        {title:'Neighbor needs a favor', desc:'Watch their dog 1 hour.', cat:"social", choices:[
+          {emoji:"🐕", label:'Sure, happy to help', e:{dir:4,happy:4,social:6}, tone:"pos"},
+          {emoji:"⏰", label:'Only if you can be back in time', e:{dir:2,social:3}, tone:"neu"},
+          {emoji:"🙅", label:'Sorry, busy day', e:{dir:-1,social:-3}, tone:"neg"},
+        ]},
+    ],
+    "Late afternoon": [
+        {title:'School pickup', desc:'Kids tumble out.', cat:"family", choices:[
+          {emoji:"🤗", label:'Big hug, ask about their day', e:{dir:5,happy:6,social:7}, tone:"pos"},
+          {emoji:"🚗", label:'Quick hi, hurry to next thing', e:{dir:1,social:2}, tone:"neu"},
+          {emoji:"📱", label:'Distracted, on phone', e:{dir:-3,happy:-2,social:-4}, tone:"neg"},
+        ]},
+        {title:'Homework time begins', desc:'Kid is struggling.', cat:"family", choices:[
+          {emoji:"🧠", label:'Sit & help patiently', e:{dir:5,smarts:4,social:6}, tone:"pos"},
+          {emoji:"📚", label:'Make them figure it out', e:{dir:2,smarts:3,social:-1}, tone:"mix"},
+          {emoji:"😤", label:'Lose patience, snap', e:{dir:-5,happy:-3,social:-5}, tone:"neg"},
+        ]},
+        {title:'Kid wants extra activity', desc:'Asks for art class.', cat:"family", choices:[
+          {emoji:"🎨", label:'Yes, sign them up', e:{dir:4,money:-80,happy:5,social:4}, tone:"pos"},
+          {emoji:"⏳", label:'Maybe next term', e:{dir:-1,social:-2}, tone:"neu"},
+          {emoji:"🚫", label:'Flat no, costs money', e:{dir:-3,happy:-3,social:-4}, tone:"neg"},
+        ]},
+    ],
+    "Evening": [
+        {title:'Your partner gets home', desc:'Looking tired.', cat:"family", choices:[
+          {emoji:"🤗", label:'Hug, ask about their day', e:{dir:5,happy:5,social:7}, tone:"pos"},
+          {emoji:"☕", label:'Hand them tea, listen', e:{dir:5,happy:4,social:6}, tone:"pos"},
+          {emoji:"📋", label:'Launch into the to-do list', e:{dir:-3,happy:-3,social:-4}, tone:"neg"},
+        ]},
+        {title:'Family dinner prep', desc:'An hour of cooking ahead.', cat:"food", choices:[
+          {emoji:"🍳", label:'Cook with kids helping', e:{dir:5,health:4,happy:5,social:7}, tone:"pos"},
+          {emoji:"🎧", label:'Cook solo with podcast', e:{dir:4,health:3,happy:4,smarts:3}, tone:"pos"},
+          {emoji:"🥡", label:'Order in, exhausted', e:{dir:-1,money:-50,health:-2}, tone:"neg"},
+        ]},
+        {title:'Kid had a fight at school', desc:'Crying at the table.', cat:"family", choices:[
+          {emoji:"👂", label:'Drop everything, listen', e:{dir:6,happy:4,social:8}, tone:"pos"},
+          {emoji:"💡", label:'Give them practical advice', e:{dir:4,smarts:3,social:5}, tone:"pos"},
+          {emoji:"😤", label:'"Get over it, kids fight."', e:{dir:-6,happy:-5,social:-7}, tone:"neg"},
+        ]},
+    ],
+    "Dinner": [
+        {title:'Dinner together', desc:'Everyone at the table.', cat:"family", choices:[
+          {emoji:"🗣️", label:'Round-robin: each share a story', e:{dir:6,happy:8,social:8}, tone:"pos"},
+          {emoji:"🍽️", label:'Eat, no phones rule', e:{dir:5,happy:5,social:6}, tone:"pos"},
+          {emoji:"📺", label:'TV on in the background', e:{happy:3,social:-2}, tone:"neu"},
+        ]},
+        {title:'Picky eater again', desc:"Kid won't touch dinner.", cat:"family", choices:[
+          {emoji:"🥕", label:'Patient, offer one new bite', e:{dir:4,smarts:3,social:4}, tone:"pos"},
+          {emoji:"🍕", label:'Make them a separate meal', e:{dir:-2,happy:-2,social:2}, tone:"neg"},
+          {emoji:"😡", label:'Force them to eat', e:{dir:-5,happy:-4,social:-5}, tone:"neg"},
+        ]},
+        {title:'Partner mentions money is tight', desc:'Worry in their voice.', cat:"finance", choices:[
+          {emoji:"📊", label:'Sit together, plan budget', e:{dir:5,money:20,smarts:5,social:6}, tone:"pos"},
+          {emoji:"💕", label:"Reassure, you'll figure it out", e:{dir:3,social:4}, tone:"pos"},
+          {emoji:"😔", label:'Internalize the stress alone', e:{dir:-4,health:-4,happy:-5}, tone:"neg"},
+        ]},
+    ],
+    "Night": [
+        {title:'Kids in bed, finally', desc:'House is quiet.', cat:"self", choices:[
+          {emoji:"📖", label:'Read in bed, peaceful', e:{dir:5,happy:6,smarts:5}, tone:"pos"},
+          {emoji:"🎬", label:'Movie with partner', e:{dir:5,happy:7,social:7}, tone:"pos"},
+          {emoji:"🧹", label:'Squeeze in more chores', e:{dir:-1,health:-3,smarts:2}, tone:"neu"},
+          {emoji:"🎨", label:'Hobby time, just for you', e:{dir:5,happy:8,smarts:3}, tone:"pos"},
+        ]},
+        {title:'Partner wants closeness', desc:'Slow night together.', cat:"family", choices:[
+          {emoji:"💕", label:'Yes, connect deeply', e:{dir:6,happy:9,social:8}, tone:"pos"},
+          {emoji:"🛋️", label:'Cuddle on the couch instead', e:{dir:4,happy:5,social:6}, tone:"pos"},
+          {emoji:"😪", label:'"Sorry, I\'m exhausted."', e:{dir:-3,happy:-3,social:-5}, tone:"neg"},
+        ]},
+        {title:"Tomorrow's school project", desc:'Kid forgot to mention earlier.', cat:"family", choices:[
+          {emoji:"🤝", label:'Pull craft supplies, do it together', e:{dir:5,health:-2,smarts:3,social:6}, tone:"pos"},
+          {emoji:"⏰", label:'Quick prep, lights out by 10', e:{dir:3,smarts:2,social:3}, tone:"pos"},
+          {emoji:"😡", label:'"Should\'ve told me sooner!"', e:{dir:-4,happy:-3,social:-5}, tone:"neg"},
+        ]},
+    ],
+    "Bedtime": [
+        {title:'Time to wind down', desc:'Body aches a bit.', cat:"self", choices:[
+          {emoji:"🧘", label:'Gentle stretching', e:{dir:5,health:6,happy:4}, tone:"pos"},
+          {emoji:"🛁", label:'Warm bath', e:{dir:5,health:5,happy:6}, tone:"pos"},
+          {emoji:"📱", label:'Scroll till your eyes hurt', e:{dir:-3,health:-3,happy:-1}, tone:"neg"},
+        ]},
+        {title:'Check on sleeping kids', desc:'One last peek.', cat:"family", choices:[
+          {emoji:"💕", label:'Tuck them in again, quiet', e:{dir:5,happy:8,social:5}, tone:"pos"},
+          {emoji:"👀", label:"Quick glance, all's well", e:{dir:3,happy:4}, tone:"pos"},
+          {emoji:"⏭️", label:"Trust they're fine, sleep", e:{dir:2,happy:2}, tone:"neu"},
+        ]},
+        {title:'Reflect on your day', desc:'Quiet thought.', cat:"self", choices:[
+          {emoji:"🙏", label:'Three things you did well', e:{dir:5,happy:7}, tone:"pos"},
+          {emoji:"📓", label:"Plan tomorrow's priorities", e:{dir:4,happy:3,smarts:4}, tone:"pos"},
+          {emoji:"😟", label:'Beat yourself up over today', e:{dir:-5,health:-3,happy:-6}, tone:"neg"},
+        ]},
+    ],
+  },
+  "senior": {
+    "Morning": [
+        {title:'Wake up early', desc:'Sun is up. So are you.', cat:"self", choices:[
+          {emoji:"🌅", label:'Sit by the window with tea', e:{dir:5,health:3,happy:6}, tone:"pos"},
+          {emoji:"🧘", label:'Morning yoga / stretches', e:{dir:5,health:8,happy:4}, tone:"pos"},
+          {emoji:"🛌", label:'Stay in bed, dose more', e:{dir:-1,health:-2,happy:2}, tone:"neu"},
+        ]},
+        {title:"Old friend's morning text", desc:'Daily "good morning".', cat:"social", choices:[
+          {emoji:"💕", label:'Long, warm reply', e:{dir:5,happy:5,social:7}, tone:"pos"},
+          {emoji:"👋", label:'Quick "morning!" back', e:{dir:3,social:3}, tone:"pos"},
+          {emoji:"📵", label:"Ignore, you'll reply later", e:{dir:-1,social:-2}, tone:"neu"},
+        ]},
+        {title:'Joints stiff today', desc:'Old age catching up.', cat:"health", choices:[
+          {emoji:"🚶", label:'Slow walk to loosen up', e:{dir:5,health:7,happy:4}, tone:"pos"},
+          {emoji:"💊", label:'Take your meds & rest', e:{dir:3,health:4}, tone:"pos"},
+          {emoji:"😣", label:'Push through, ignore it', e:{dir:-3,health:-4}, tone:"neg"},
+        ]},
+    ],
+    "Breakfast": [
+        {title:'Light breakfast', desc:"Doctor's orders.", cat:"food", choices:[
+          {emoji:"🥣", label:'Oats, fruit, herbal tea', e:{dir:5,health:7,happy:3}, tone:"pos"},
+          {emoji:"🍞", label:'Toast & jam, simple', e:{dir:2,health:2}, tone:"neu"},
+          {emoji:"🍳", label:'Fried eggs with butter', e:{dir:-2,health:-4,happy:3}, tone:"neg"},
+        ]},
+        {title:'Newspaper at the table', desc:'Same routine for years.', cat:"leisure", choices:[
+          {emoji:"📰", label:'Read cover to cover', e:{dir:4,happy:4,smarts:5}, tone:"pos"},
+          {emoji:"📺", label:'Watch morning news instead', e:{dir:2,happy:2,smarts:2}, tone:"neu"},
+          {emoji:"📱", label:'Skip, scroll WhatsApp', e:{smarts:-1,social:2}, tone:"neu"},
+        ]},
+        {title:'Your partner is up', desc:'Coffee in hand.', cat:"family", choices:[
+          {emoji:"💕", label:'Long, easy chat over breakfast', e:{dir:6,happy:8,social:8}, tone:"pos"},
+          {emoji:"🍳", label:'Cook them a proper meal', e:{dir:5,health:3,happy:5,social:6}, tone:"pos"},
+          {emoji:"🤐", label:'Eat in silence', e:{dir:-2,happy:-3,social:-4}, tone:"neg"},
+        ]},
+    ],
+    "Mid-morning": [
+        {title:'Morning walk', desc:'Park is calling.', cat:"health", choices:[
+          {emoji:"🌳", label:'30-min walk, full pace', e:{dir:6,health:10,happy:6}, tone:"pos"},
+          {emoji:"🚶", label:'10-min slow walk', e:{dir:4,health:5,happy:3}, tone:"pos"},
+          {emoji:"📺", label:'Stay home, watch TV', e:{dir:-3,health:-4,happy:2}, tone:"neg"},
+        ]},
+        {title:'Grandkids video-call', desc:'They want to see you.', cat:"family", choices:[
+          {emoji:"💕", label:'30 mins, all attention', e:{dir:6,happy:10,social:9}, tone:"pos"},
+          {emoji:"📞", label:'Quick 5 mins, busy', e:{dir:2,happy:4,social:3}, tone:"neu"},
+          {emoji:"📵", label:"Don't pick up", e:{dir:-5,happy:-5,social:-7}, tone:"neg"},
+        ]},
+        {title:"Doctor's appointment due", desc:'Just routine.', cat:"health", choices:[
+          {emoji:"🏥", label:'Go, get checked thoroughly', e:{dir:5,money:-30,health:6}, tone:"pos"},
+          {emoji:"📅", label:'Reschedule for next week', e:{health:-2}, tone:"neu"},
+          {emoji:"🚫", label:'Skip, you feel fine', e:{dir:-5,health:-7}, tone:"neg"},
+        ]},
+    ],
+    "Lunch": [
+        {title:'Cook lunch', desc:'Whatever feels right.', cat:"food", choices:[
+          {emoji:"🥗", label:'Balanced meal, vegetables', e:{dir:5,health:7,happy:4}, tone:"pos"},
+          {emoji:"🍲", label:'Light soup', e:{dir:4,health:4,happy:3}, tone:"pos"},
+          {emoji:"🍕", label:'Treat yourself: pizza', e:{health:-4,happy:5}, tone:"mix"},
+        ]},
+        {title:'Old friend visits', desc:'Knock on the door.', cat:"social", choices:[
+          {emoji:"☕", label:'Make tea, settle in for hours', e:{dir:6,happy:8,social:10}, tone:"pos"},
+          {emoji:"🚶", label:'Quick walk together', e:{dir:5,health:4,happy:5,social:7}, tone:"pos"},
+          {emoji:"⏰", label:'Polite, but short visit', e:{dir:2,social:3}, tone:"neu"},
+        ]},
+        {title:'Pension/income arrived', desc:'Bank notification.', cat:"finance", choices:[
+          {emoji:"📊", label:'Plan the month carefully', e:{dir:4,money:20,smarts:4}, tone:"pos"},
+          {emoji:"🎁", label:'Set aside gift money for grandkids', e:{dir:5,money:-50,happy:6,social:5}, tone:"pos"},
+          {emoji:"💸", label:'Splurge on something nice', e:{dir:1,money:-100,happy:5}, tone:"mix"},
+        ]},
+    ],
+    "Afternoon": [
+        {title:'Afternoon nap?', desc:'Eyes feel heavy.', cat:"self", choices:[
+          {emoji:"💤", label:'20-min nap', e:{dir:5,health:6,happy:5}, tone:"pos"},
+          {emoji:"📖", label:'Read instead', e:{dir:4,happy:4,smarts:5}, tone:"pos"},
+          {emoji:"📺", label:'TV on, doze on couch', e:{dir:2,health:-1,happy:3}, tone:"neu"},
+        ]},
+        {title:'Garden needs attention', desc:'Plants thirsty.', cat:"leisure", choices:[
+          {emoji:"🌱", label:'Tend to it for an hour', e:{dir:5,health:4,happy:7,smarts:3}, tone:"pos"},
+          {emoji:"💧", label:'Quick watering only', e:{dir:3,health:2,happy:3}, tone:"neu"},
+          {emoji:"⏭️", label:'Tomorrow', e:{dir:-1,happy:-1}, tone:"neu"},
+        ]},
+        {title:'Hobby project waiting', desc:'Painting / knitting / wood.', cat:"leisure", choices:[
+          {emoji:"🎨", label:'Two solid hours of focus', e:{dir:6,happy:9,smarts:4}, tone:"pos"},
+          {emoji:"✋", label:'Just 30 minutes today', e:{dir:4,happy:5,smarts:2}, tone:"pos"},
+          {emoji:"📺", label:'Skip, watch news', e:{dir:-1,happy:-2,smarts:-1}, tone:"neg"},
+        ]},
+    ],
+    "Late afternoon": [
+        {title:'Senior club / community', desc:'Weekly meet today.', cat:"social", choices:[
+          {emoji:"🎲", label:'Go, play cards with friends', e:{dir:6,happy:8,social:10}, tone:"pos"},
+          {emoji:"☕", label:'Stop in for tea, leave early', e:{dir:4,happy:4,social:5}, tone:"pos"},
+          {emoji:"🏠", label:'Stay home, too tired', e:{dir:-3,happy:-3,social:-5}, tone:"neg"},
+        ]},
+        {title:'Adult kid calls', desc:'They sound stressed.', cat:"family", choices:[
+          {emoji:"👂", label:'Listen carefully, support them', e:{dir:6,happy:4,social:8}, tone:"pos"},
+          {emoji:"💡", label:'Share wisdom, gentle advice', e:{dir:5,smarts:3,social:6}, tone:"pos"},
+          {emoji:"🤐", label:'"You\'ll figure it out"', e:{dir:-3,social:-4}, tone:"neg"},
+        ]},
+        {title:'Tea time with neighbor', desc:'Daily ritual.', cat:"social", choices:[
+          {emoji:"☕", label:'Hour-long catch-up', e:{dir:5,happy:6,social:8}, tone:"pos"},
+          {emoji:"⏰", label:'Quick chai & chat', e:{dir:4,happy:4,social:5}, tone:"pos"},
+          {emoji:"🚪", label:'Skip today, rest', e:{dir:-1,happy:-2,social:-3}, tone:"neg"},
+        ]},
+    ],
+    "Evening": [
+        {title:'Evening walk', desc:'Cooler air.', cat:"health", choices:[
+          {emoji:"🌅", label:'Long stroll in the park', e:{dir:6,health:8,happy:6}, tone:"pos"},
+          {emoji:"🚶", label:'Around the block only', e:{dir:3,health:4,happy:3}, tone:"pos"},
+          {emoji:"🛋️", label:'Stay in, knees hurt', e:{dir:-2,health:-3,happy:-1}, tone:"neg"},
+        ]},
+        {title:'Family wants dinner with you', desc:'Kids visiting.', cat:"family", choices:[
+          {emoji:"🍽️", label:'Cook for everyone, joyful', e:{dir:6,money:-40,health:-2,happy:9,social:9}, tone:"pos"},
+          {emoji:"🥡", label:'Order in, simpler', e:{dir:4,money:-50,happy:6,social:7}, tone:"pos"},
+          {emoji:"😪", label:'Cancel, too tired', e:{dir:-5,happy:-5,social:-7}, tone:"neg"},
+        ]},
+        {title:'Photo album reminder', desc:'Old memories surface.', cat:"self", choices:[
+          {emoji:"📷", label:'Look through, reminisce', e:{dir:5,happy:7,smarts:2}, tone:"pos"},
+          {emoji:"📞", label:'Call old friend about it', e:{dir:6,happy:8,social:8}, tone:"pos"},
+          {emoji:"📦", label:'Put it back in the closet', e:{dir:-1,happy:-2}, tone:"neg"},
+        ]},
+    ],
+    "Dinner": [
+        {title:'Light dinner', desc:"Doctor's orders.", cat:"food", choices:[
+          {emoji:"🥗", label:'Salad & soup', e:{dir:5,health:6,happy:3}, tone:"pos"},
+          {emoji:"🍲", label:'Khichdi or simple curry', e:{dir:4,health:4,happy:4}, tone:"pos"},
+          {emoji:"🍕", label:'Heavy meal, regret tomorrow', e:{dir:-2,health:-5,happy:4}, tone:"neg"},
+        ]},
+        {title:'Eat together or alone', desc:'Routine moment.', cat:"family", choices:[
+          {emoji:"🕯️", label:'Light a candle, savor it', e:{dir:5,happy:7,social:5}, tone:"pos"},
+          {emoji:"📺", label:'TV on, eat together', e:{dir:3,happy:3,social:3}, tone:"neu"},
+          {emoji:"📰", label:'Read paper while eating', e:{dir:1,smarts:2,social:-2}, tone:"neu"},
+        ]},
+        {title:'Adult child invited you over', desc:'Their place.', cat:"family", choices:[
+          {emoji:"✅", label:'Go, spend time with grandkids', e:{dir:6,happy:10,social:10}, tone:"pos"},
+          {emoji:"📞", label:"Call instead, you're tired", e:{dir:2,social:3}, tone:"neu"},
+          {emoji:"🚫", label:'Decline, not feeling up', e:{dir:-3,happy:-4,social:-5}, tone:"neg"},
+        ]},
+    ],
+    "Night": [
+        {title:'Free evening', desc:'What sounds good?', cat:"leisure", choices:[
+          {emoji:"📖", label:'Read your book', e:{dir:5,happy:5,smarts:6}, tone:"pos"},
+          {emoji:"🎬", label:'Old movie on TV', e:{dir:4,happy:6,smarts:2}, tone:"pos"},
+          {emoji:"📞", label:'Long call with sibling', e:{dir:6,happy:7,social:9}, tone:"pos"},
+          {emoji:"🎨", label:'Work on hobby', e:{dir:5,happy:8,smarts:3}, tone:"pos"},
+        ]},
+        {title:'Memory of someone passed', desc:'Hits unexpectedly.', cat:"self", choices:[
+          {emoji:"💗", label:'Sit with the feeling, breathe', e:{dir:4,health:2,happy:2}, tone:"pos"},
+          {emoji:"📞", label:'Call someone who knew them', e:{dir:5,happy:4,social:7}, tone:"pos"},
+          {emoji:"🍷", label:'Drown it with a drink', e:{dir:-4,health:-5,happy:-3}, tone:"neg"},
+        ]},
+        {title:'Insomnia setting in', desc:'Mind racing.', cat:"health", choices:[
+          {emoji:"🍵", label:'Herbal tea, breathe slowly', e:{dir:4,health:5,happy:3}, tone:"pos"},
+          {emoji:"📖", label:'Read until sleepy', e:{dir:4,happy:3,smarts:3}, tone:"pos"},
+          {emoji:"📺", label:'TV blaring keeps you up', e:{dir:-3,health:-4,happy:-3}, tone:"neg"},
+        ]},
+    ],
+    "Bedtime": [
+        {title:'Time for bed', desc:'Body knows the rhythm.', cat:"self", choices:[
+          {emoji:"🧘", label:'Slow breathing, settle', e:{dir:5,health:6,happy:5}, tone:"pos"},
+          {emoji:"🪥", label:'Routine: brush, meds, sleep', e:{dir:4,health:4,happy:3}, tone:"pos"},
+          {emoji:"📱", label:'Scroll the news in bed', e:{dir:-3,health:-3,happy:-2}, tone:"neg"},
+        ]},
+        {title:'Pray / meditate', desc:'Nightly habit.', cat:"self", choices:[
+          {emoji:"🙏", label:'Quiet gratitude practice', e:{dir:6,health:3,happy:8}, tone:"pos"},
+          {emoji:"📿", label:'Just a quick prayer', e:{dir:4,happy:4}, tone:"pos"},
+          {emoji:"⏭️", label:'Skip tonight', e:{dir:-1,happy:-2}, tone:"neu"},
+        ]},
+        {title:'Reflect on the day', desc:'Long life, long days.', cat:"self", choices:[
+          {emoji:"🙏", label:'Three small joys', e:{dir:6,happy:8}, tone:"pos"},
+          {emoji:"💗", label:'Think of someone you love', e:{dir:5,happy:7,social:4}, tone:"pos"},
+          {emoji:"😟", label:'Worry about your health', e:{dir:-4,health:-3,happy:-5}, tone:"neg"},
+        ]},
+    ],
+  },
+  "student": null, // alias - filled below
 };
+LIFESTYLE_POOLS.student = LIFESTYLE_POOLS.minor; // students get minor-flavored events
+
 
 let S = null;
 
@@ -530,9 +1292,12 @@ function defaultState(){
     name:"",
     avatarId:null,
     traitId:null,
+    ageGroup:null,
+    occupation:null,
     day:1,
     slotIdx:0,
     daySlots:[],
+    recentEventTitles:[],
     direction:0,
     dayStartDir:0,
     money:200,
@@ -617,13 +1382,38 @@ function avatarEmoji(){
 }
 
 function buildDay(){
+  const lifestyle = lifestyleKey();
+  const pools = LIFESTYLE_POOLS[lifestyle] || LIFESTYLE_POOLS.job;
   const slots = [];
+  // Track categories used so far in THIS day to encourage variety within the day
+  const todayCats = new Set();
+  // recentEventTitles persists across days - last ~25 event titles seen
+  const recent = new Set(S.recentEventTitles || []);
+
   for (const t of TIME_SLOTS) {
-    const pool = POOLS[t.label] || POOLS.Afternoon;
-    const ev = pool[Math.floor(Math.random()*pool.length)];
-    slots.push({time:t.time, label:t.label, event:ev});
+    const pool = pools[t.label] || pools.Afternoon || [];
+    if (pool.length === 0) {
+      // Fallback to job pool if a slot is empty for this lifestyle
+      const fallback = LIFESTYLE_POOLS.job[t.label] || LIFESTYLE_POOLS.job.Afternoon;
+      slots.push({time:t.time, label:t.label, event: fallback[Math.floor(Math.random()*fallback.length)]});
+      continue;
+    }
+    // Score each event: prefer events with categories not already in today, and titles not recently seen
+    const scored = pool.map(ev => {
+      let score = Math.random(); // base randomness
+      if (ev.cat && !todayCats.has(ev.cat)) score += 1.5; // big boost for new category today
+      if (!recent.has(ev.title)) score += 0.6; // boost for fresh titles
+      return {ev, score};
+    });
+    scored.sort((a,b) => b.score - a.score);
+    const chosen = scored[0].ev;
+    if (chosen.cat) todayCats.add(chosen.cat);
+    slots.push({time:t.time, label:t.label, event:chosen});
   }
   S.daySlots = slots;
+  // Update recent titles list - keep last 25
+  const newRecent = slots.map(s => s.event.title);
+  S.recentEventTitles = (newRecent.concat(S.recentEventTitles || [])).slice(0, 25);
   if (S.slotIdx === 0) S.dayStartDir = S.direction;
 }
 
@@ -664,6 +1454,8 @@ function render(){
     case "name":       renderName(app); break;
     case "avatar":     renderAvatar(app); break;
     case "trait":      renderTrait(app); break;
+    case "age":        renderAge(app); break;
+    case "occupation": renderOccupation(app); break;
     case "play":       renderPlay(app); break;
     case "daySummary": renderDaySummary(app); break;
   }
@@ -733,7 +1525,7 @@ function renderIntro(app){
 function renderName(app){
   app.appendChild(el("div", {class:"top-nav"}, [
     el("button", {class:"icon-btn", onclick:()=>{ S.phase="intro"; render(); }}, "←"),
-    el("span", {class:"step-pill"}, "Step 1 of 3"),
+    el("span", {class:"step-pill"}, "Step 1"),
   ]));
   app.appendChild(el("div", {class:"gap-l"}));
   app.appendChild(el("h1", {class:"h1 mb-s"}, "What's your name?"));
@@ -754,7 +1546,7 @@ function renderName(app){
 function renderAvatar(app){
   app.appendChild(el("div", {class:"top-nav"}, [
     el("button", {class:"icon-btn", onclick:()=>{ S.phase="name"; render(); }}, "←"),
-    el("span", {class:"step-pill"}, "Step 2 of 3"),
+    el("span", {class:"step-pill"}, "Step 2"),
   ]));
   app.appendChild(el("div", {class:"gap-l"}));
   app.appendChild(el("h1", {class:"h1 mb-s"}, "Hi, " + S.name + "!"));
@@ -777,7 +1569,7 @@ function renderAvatar(app){
 function renderTrait(app){
   app.appendChild(el("div", {class:"top-nav"}, [
     el("button", {class:"icon-btn", onclick:()=>{ S.phase="avatar"; render(); }}, "←"),
-    el("span", {class:"step-pill"}, "Step 3 of 3"),
+    el("span", {class:"step-pill"}, "Step 3"),
   ]));
   app.appendChild(el("div", {class:"gap-l"}));
   app.appendChild(el("h1", {class:"h1 mb-s"}, "Pick a starting trait"));
@@ -795,6 +1587,79 @@ function renderTrait(app){
   app.appendChild(el("button", {class:"btn-primary", onclick:()=>{
     if(!S.traitId){ showToast("Pick a trait", "#EF9F27"); return; }
     applyTrait();
+    S.phase = "age";
+    render();
+  }}, [el("span",null,"Continue"), el("span",null,"→")]));
+}
+
+function renderAge(app){
+  app.appendChild(el("div", {class:"top-nav"}, [
+    el("button", {class:"icon-btn", onclick:()=>{ S.phase="trait"; render(); }}, "←"),
+    el("span", {class:"step-pill"}, "Step 4"),
+  ]));
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("h1", {class:"h1 mb-s"}, "Your age group?"));
+  app.appendChild(el("div", {class:"text-sec mb-l"}, "This shapes the rhythm of your day."));
+  const list = el("div", {style:{display:"flex", flexDirection:"column", gap:"10px"}});
+  AGE_GROUPS.forEach(a=>{
+    const isSel = S.ageGroup===a.id;
+    const card = el("div", {
+      class: "pick" + (isSel ? " selected" : ""),
+      style: {textAlign:"left", padding:"14px 16px", display:"flex", alignItems:"center", gap:"14px"},
+      onclick: ()=>{ S.ageGroup = a.id; render(); }
+    }, [
+      el("div", {style:{fontSize:"36px", lineHeight:"1"}}, a.emoji),
+      el("div", {style:{flex:"1"}}, [
+        el("div", {class:"pick-label", style:{textAlign:"left", margin:"0 0 2px"}}, a.label),
+        el("div", {class:"pick-desc", style:{textAlign:"left", margin:"0"}}, a.desc),
+      ]),
+    ]);
+    list.appendChild(card);
+  });
+  app.appendChild(list);
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("button", {class:"btn-primary", onclick:()=>{
+    if(!S.ageGroup){ showToast("Pick an age group", "#EF9F27"); return; }
+    if (S.ageGroup === "adult") {
+      S.phase = "occupation";
+    } else {
+      // Minor or senior - skip occupation, jump to play
+      buildDay();
+      S.phase = "play";
+      save();
+    }
+    render();
+  }}, [el("span",null, S.ageGroup === "adult" ? "Continue" : "Begin day 1"), el("span",null, S.ageGroup === "adult" ? "→" : "▶")]));
+}
+
+function renderOccupation(app){
+  app.appendChild(el("div", {class:"top-nav"}, [
+    el("button", {class:"icon-btn", onclick:()=>{ S.phase="age"; render(); }}, "←"),
+    el("span", {class:"step-pill"}, "Step 5"),
+  ]));
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("h1", {class:"h1 mb-s"}, "What do you do?"));
+  app.appendChild(el("div", {class:"text-sec mb-l"}, "Your daily life will revolve around this."));
+  const list = el("div", {style:{display:"flex", flexDirection:"column", gap:"10px"}});
+  OCCUPATIONS.forEach(o=>{
+    const isSel = S.occupation===o.id;
+    const card = el("div", {
+      class: "pick" + (isSel ? " selected" : ""),
+      style: {textAlign:"left", padding:"14px 16px", display:"flex", alignItems:"center", gap:"14px"},
+      onclick: ()=>{ S.occupation = o.id; render(); }
+    }, [
+      el("div", {style:{fontSize:"36px", lineHeight:"1"}}, o.emoji),
+      el("div", {style:{flex:"1"}}, [
+        el("div", {class:"pick-label", style:{textAlign:"left", margin:"0 0 2px"}}, o.label),
+        el("div", {class:"pick-desc", style:{textAlign:"left", margin:"0"}}, o.desc),
+      ]),
+    ]);
+    list.appendChild(card);
+  });
+  app.appendChild(list);
+  app.appendChild(el("div", {class:"gap-l"}));
+  app.appendChild(el("button", {class:"btn-primary", onclick:()=>{
+    if(!S.occupation){ showToast("Pick an option", "#EF9F27"); return; }
     buildDay();
     S.phase = "play";
     save();
